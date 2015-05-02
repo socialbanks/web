@@ -16,7 +16,8 @@ namespace SocialBanksWeb.Controllers
         public async Task<ActionResult> Index()
         {
             ParseClient.Initialize(ApplicationId_DEV, DotnetKey_DEV);
-            var message = "NOTHING";
+           
+            var message = "TEST: ";
 
             ParseObject country = await GetBrazil_Test();
             message += "; " + country.Get<string>("name");
