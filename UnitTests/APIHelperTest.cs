@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Parse;
 using SocialBanksWeb.Helpers;
 using System;
 using System.Collections.Generic;
@@ -12,56 +11,34 @@ namespace UnitTests
     [TestClass]
     public class APIHelperTest
     {
-        private const string ApplicationId_DEV = "bCOd9IKjrpxCPGYQfyagabirn7pYFjYTvJqkq1x1";
-        private const string DotnetKey_DEV = "GYMOAhUQ55yYAuEehlecpipu90RFeaPSPn3zcFZ6";
-
+        APIHelper ObjectUnderTest;
         [TestInitialize]
         public void TestInitialize()
         {
-            ParseClient.Initialize(ApplicationId_DEV, DotnetKey_DEV);
+            var path = AppDomain.CurrentDomain.BaseDirectory;
+            var pathBits = path.Split('\\');
+            path = string.Join("\\", pathBits, 0, (pathBits.Length - 3));
+            path += "\\SocialBanksWeb\\keys.txt";
 
-            Task task = ParseUser.LogInAsync("fabriciomatos", "123456");
-            task.Wait();
-            
-        }
-
-        [TestMethod]
-        public void InstanceIsntNull()
-        {
-            var instance = APIHelper.Instance;
-            Assert.IsNotNull(instance);
+            ObjectUnderTest = new APIHelper(path);
         }
 
         [TestMethod]
         public void HelloWorld()
         {
-            Assert.AreEqual("Hello world!", APIHelper.Instance.Hello());
+            var v = ObjectUnderTest.hello();
+            v.Wait();
+
+            Assert.AreEqual("Hello world!", v.Result);
         }
 
-        [TestMethod]
-        public void GetBalances_OLD()
-        {
-            Dictionary<string, object> result = APIHelper.Instance.GetBalances_OLD("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
-
-            var list = result["result"] as List<object>;
-
-            Assert.AreEqual(2, list.Count);
-
-            var result0 = list[0] as Dictionary<string, object>;
-            Assert.AreEqual("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", result0["address"]);
-            Assert.AreEqual("BRAZUCA", result0["asset"]);
-            Assert.AreEqual((Int64)49000000000, result0["quantity"]);
-
-            var result1 = list[1] as Dictionary<string, object>;
-            Assert.AreEqual("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", result1["address"]);
-            Assert.AreEqual("XCP", result1["asset"]);
-            Assert.AreEqual((Int64)38500000, result1["quantity"]);
-        }
 
         [TestMethod]
-        public void GetBalances()
+        public void GetBalances_Returns_2Items()
         {
-            List<DtoAsset> result = APIHelper.Instance.GetBalances("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            var q = ObjectUnderTest.get_balances("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            q.Wait();
+            var result = q.Result.Result;
 
             Assert.AreEqual(2, result.Count);
 
@@ -77,6 +54,23 @@ namespace UnitTests
 
             //BITCOIN
             //TODO: Retornar tambem bitcoin
+        }
+
+        [TestMethod]
+        public void GetBalances_Returns_Error()
+        {
+            //arrange
+            ObjectUnderTest.CauseError = true;
+
+            //act
+            var q = ObjectUnderTest.get_balances("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            q.Wait();
+            var result = q.Result;
+
+            Assert.AreEqual(0, result.Result.Count);
+            Assert.AreEqual(-32601, result.ErrorCode);
+            Assert.AreEqual("Method not found", result.ErrorMessage);
+
         }
     }
 }
