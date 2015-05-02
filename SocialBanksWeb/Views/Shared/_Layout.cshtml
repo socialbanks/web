@@ -5,10 +5,10 @@
         <title>@ViewBag.Title - My ASP.NET MVC Application</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/bootstrapcss")
+        @Styles.Render("~/Content/flatuicss")
+        @Styles.Render("~/Content/footercss")
         @Scripts.Render("~/bundles/modernizr")
-        @Scripts.Render("~/Content/bootstrapcss")
-        @Scripts.Render("~/Content/flatuicss")
-        @Scripts.Render("~/Content/footercss")
     </head>
     <body>
         <div class="page-wrapper">
