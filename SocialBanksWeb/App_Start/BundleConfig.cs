@@ -12,7 +12,7 @@ namespace SocialBanksWeb
                         "~/Scripts/jquery-2.0.3.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrapjs").Include(
-           "~/Scripts/flat-ui/js/bootstrap.js"));
+                        "~/Scripts/flat-ui/js/bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryscroll").Include(
                        "~/Scripts/common-files/js/jquery.scrollTo-{version}.js"));
@@ -70,7 +70,7 @@ namespace SocialBanksWeb
                         "~/Content/themes/base/jquery.ui.theme.css"));
             
             bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include(
-           "~/Content/themes/flat-ui/bootstrap/css/bootstrap.css"));
+                        "~/Content/themes/flat-ui/bootstrap/css/bootstrap.css"));
 
             bundles.Add(new StyleBundle("~/Content/flatuicss").Include(
                         "~/Content/themes/flat-ui/css/flat-ui.css"));
