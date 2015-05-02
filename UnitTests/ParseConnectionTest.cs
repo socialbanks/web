@@ -17,12 +17,15 @@ namespace UnitTests
         public void TestInitialize()
         {
             ParseClient.Initialize(ApplicationId_DEV, DotnetKey_DEV);
+            
+            Task task = ParseUser.LogInAsync("fabriciomatos", "123456");
+            task.Wait();
         }
 
         [TestMethod]
         public void GetBrazilCountryByNameWorks()
         {
-
+            
             var query = from country in ParseObject.GetQuery("Country")
                         where country.Get<string>("name") == "Brazil"
                         select country;
@@ -50,7 +53,5 @@ namespace UnitTests
             Assert.AreEqual(20, results.ToList().Count);
             Assert.AreEqual("Bahamas", results.ToList().First<ParseObject>().Get<string>("name"));
         }
-
-
     }
 }
