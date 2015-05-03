@@ -50,7 +50,7 @@ namespace UnitTests
             //XCP
             Assert.AreEqual("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", result[1].Address);
             Assert.AreEqual("XCP", result[1].Name);
-            Assert.AreEqual((long)38500000, result[1].Quantity);
+            Assert.AreEqual((long)1016500000, result[1].Quantity);
 
             //BITCOIN
             //TODO: Retornar tambem bitcoin
