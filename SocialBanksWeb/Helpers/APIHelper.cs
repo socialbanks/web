@@ -7,11 +7,10 @@ using System.Web;
 
 namespace SocialBanksWeb.Helpers
 {
-    public class DtoAssets
+    public class DtoApiResponse<TDto>
     {
-        public List<DtoAsset> Result = new List<DtoAsset> { };
-        public int ErrorCode;
-        public string ErrorMessage;
+        public TDto Result;
+        public Dictionary<string, object> Error;
     }
 
     public class DtoAsset
@@ -67,7 +66,7 @@ namespace SocialBanksWeb.Helpers
          * */
 
 
-        public async Task<DtoAssets> get_balances(params string[] adresses)
+        public async Task<DtoApiResponse<List<DtoAsset>>> get_balances(params string[] adresses)
         {
             var d = new Dictionary<string, object>();
             d["address"] = adresses;
@@ -79,13 +78,12 @@ namespace SocialBanksWeb.Helpers
 
             var r = await ParseCloud.CallFunctionAsync<Dictionary<string, object>>("get_balances", d);
 
-            var result = new DtoAssets { };
+            var result = new DtoApiResponse<List<DtoAsset>> { };
+            result.Result = new List<DtoAsset> { };
 
             if (r.ContainsKey("error"))
             {
-                var e = r["error"] as Dictionary<string, object>;
-                result.ErrorCode = int.Parse(e["code"].ToString());
-                result.ErrorMessage = e["message"].ToString();
+                result.Error = r["error"] as Dictionary<string, object>;
                 return result;
             }
 
@@ -136,5 +134,34 @@ namespace SocialBanksWeb.Helpers
         }
         */
         //public create_new_currency() ...
+
+        public async Task<DtoApiResponse<string>> create_issuance(string source, string asset, long quantity, string description)
+        {
+            var d = new Dictionary<string, object>();
+            d["source"] = source;
+            d["asset"] = asset;
+            d["quantity"] = quantity;
+            d["description"] = description;
+
+            if (this.CauseError)
+            {
+                d["cause_error"] = true;
+            }
+
+            var r = await ParseCloud.CallFunctionAsync<Dictionary<string, object>>("create_issuance", d);
+
+            var result = new DtoApiResponse<string> { };
+
+            if (r.ContainsKey("error"))
+            {
+                result.Error = r["error"] as Dictionary<string, object>;
+                return result;
+            }
+
+            result.Result = r["result"].ToString();
+
+
+            return result;
+        }
     }
 }
