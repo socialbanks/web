@@ -98,43 +98,6 @@ namespace SocialBanksWeb.Helpers
             return result;
         }
 
-        /*
-        //TODO: Eliminar esse metodo!
-        public Dictionary<string, object> GetBalances_OLD(string address)
-        {
-            var parameters = new Dictionary<string, object>();
-            parameters.Add("address", address);
-
-            var task = ParseCloud.CallFunctionAsync<Dictionary<string, object>>("get_balances", parameters);
-
-            task.Wait();
-            return task.Result;
-        }
-
-
-        public List<DtoAsset> GetBalances(string address)
-        {
-            var parameters = new Dictionary<string, object>();
-            parameters.Add("address", address);
-
-            var task = ParseCloud.CallFunctionAsync<Dictionary<string, object>>("get_balances", parameters);
-
-            task.Wait();
-
-            var apiResult = task.Result["result"] as List<object>;
-            var result = new List<DtoAsset>();
-
-            for (int i = 0; i < apiResult.Count; i++)
-            {
-                var dicAsset = apiResult[i] as Dictionary<string, object>;
-                result.Add(new DtoAsset(dicAsset["address"] as string, dicAsset["asset"] as string, (long)dicAsset["quantity"]));
-            }
-
-            return result;
-        }
-        */
-        //public create_new_currency() ...
-
         public async Task<DtoApiResponse<string>> create_issuance(string source, string asset, long quantity, string description)
         {
             var d = new Dictionary<string, object>();
