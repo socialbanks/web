@@ -106,9 +106,7 @@ namespace UnitTests
             q.Wait();
             var result = q.Result;
 
-            Assert.AreEqual(
-                "010000000177ecf2099ab2c69010c17090f7a3ef8924995bd24052e42326f6ffd5449e071c000000001976a914ce27246a0a6ca54dfa1f780ccd5cb3d0c73a75b288acffffffff020000000000000000296a272d4b3cd85a41303108ea93f95db721ad205853d604af662c5b6d8fccb987c8aec411d20270821af0ea7900000000001976a914ce27246a0a6ca54dfa1f780ccd5cb3d0c73a75b288ac00000000",
-                result.Result);
+            Assert.IsTrue(result.Result.StartsWith("010000000"));
 
         }
 
@@ -124,9 +122,7 @@ namespace UnitTests
             q.Wait();
             var result = q.Result;
 
-            Assert.AreEqual(
-                "010000000177ecf2099ab2c69010c17090f7a3ef8924995bd24052e42326f6ffd5449e071c000000001976a914ce27246a0a6ca54dfa1f780ccd5cb3d0c73a75b288acffffffff020000000000000000296a272d4b3cd85a41303108ea93f95db721ad205853d604af662c5b6d8bf4b987c8aec411d20270821af0ea7900000000001976a914ce27246a0a6ca54dfa1f780ccd5cb3d0c73a75b288ac00000000",
-                result.Result);
+            Assert.IsTrue(result.Result.StartsWith("010000000"));
 
         }
     }
