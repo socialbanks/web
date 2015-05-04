@@ -24,8 +24,8 @@
                             </div>
                             <div class="collapse navbar-collapse pull-right">
                                 <form class="navbar-form pull-left">
-                                    <a class="btn btn-warning" href="#">REGISTER NEW SOCIAL BANK</a>
-                                    <a class="btn btn-primary" href="#">SIGN IN</a>
+                                    @Html.ActionLink("REGISTER NEW SOCIAL BANK", "Create", new { controller = "SocialBank" }, new { @class = "btn btn-warning" });
+                                    @Html.ActionLink("SIGN IN", "Login", new { controller = "Account" }, new { @class = "btn btn-primary" });
                                 </form>
                             </div>
                         </nav>
