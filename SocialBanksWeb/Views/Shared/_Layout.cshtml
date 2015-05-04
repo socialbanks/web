@@ -7,41 +7,116 @@
         <meta name="viewport" content="width=device-width" />
         @Styles.Render("~/Content/bootstrapcss")
         @Styles.Render("~/Content/flatuicss")
+        @Styles.Render("~/Content/iconfont")
+        @Styles.Render("~/Content/headercss")
         @Styles.Render("~/Content/footercss")
-        @Scripts.Render("~/bundles/modernizr")
+        @Styles.Render("~/Content/css")
     </head>
     <body>
         <div class="page-wrapper">
-            <header>
-
+            <header class="header-3">
+                <div class="container">
+                    <div class="row">
+                        <nav class="navbar col-sm-12" role="navigation">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle"></button>
+                                @Html.ActionLink("Social Banks", "Index", new { controller = "Home" }, new { @class = "brand"});
+                            </div>
+                            <div class="collapse navbar-collapse pull-right">
+                                <form class="navbar-form pull-left">
+                                    <a class="btn btn-warning" href="#">REGISTER NEW SOCIAL BANK</a>
+                                    <a class="btn btn-primary" href="#">SIGN IN</a>
+                                </form>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <div class="header-background"></div>
             </header>
+            <section class="header-1-sub">
+                <div class="row">
+                    <nav class="navbar col-sm-12" role="navigation">
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav pull-right">
+                            <li>
+                                <a href="#">WHO WE ARE</a>
+                            </li>
+                            <li>
+                                <a href="#">WHAT WE DO</a>
+                            </li>
+                            <li>
+                                <a href="#">HOW IT WORKS</a>
+                            </li>
+                            <li>
+                                <a href="#">SOCIAL MONEY</a>
+                            </li>
+                            <li>
+                                <a href="#">BITCOIN TECHNOLOGY</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                </div>
+            </section>
+
             <section>
-                @RenderBody()
+                <div class="container">
+                    @RenderBody()
+                </div>
             </section>
             <!-- footer-9 -->
-            <footer class="footer-9 v-center">
+            <footer class="footer-1 bg-midnight-blue v-center">
                 <div>
                     <div class="container">
                         <div class="row">
-                            <div class="col-sm-3">
-                                <div class="box box-first">
-                                    <h6>New York, NY</h6>
-                                    <p>62 West 55th Street, Suite 302 New York, NY, 10230</p>
+                            <nav>
+                                <div class="col-sm-4">
+                                    <div class="box box-first">
+                                        <h6>Share</h6>
+                                        <div class="social-btns">
+                                            <a href="#" class="social-btn-facebook sharrre" data-text="#" data-url="#">
+                                                <div class="fui-facebook"></div>
+                                                <div class="fui-facebook"></div>
+                                                <div class="buttons">
+                                                    <div class="button facebook">
+                                                        <div id="fb-root">
+                                                        </div>
+                                                        <div class="fb-like" data-href="#" data-send="false" data-layout="button_count" data-width="" data-show-faces="false" data-action="like" data-colorscheme="" data-font="" data-via="undefined">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a href="#" class="social-btn-twitter sharrre" data-text="#" data-url="#">
+                                                <div class="fui-twitter"></div>
+                                                <div class="fui-twitter"></div>
+                                                <div class="buttons">
+                                                    <div class="button twitter">
+                                                        <a href="#" class="twitter-share-button" data-url="false" data-count="horizontal" data-text="#" data-via="#" data-hashtags="" data-related="" data-lang="en">Tweet</a>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <br class="hidden-xs">
-                                <div class="box">
-                                    <h6>San Francisco, CA</h6>
-                                    <p>560 Judah St &amp; 15th Ave, Apt 5 San Francisco, CA, 230903</p>
+                                <div class="col-sm-4 box">
+                                    <h6>Help</h6>
+                                    <ul>
+                                        <li><a href="#">Contact</a></li>
+                                        <li><a href="#">Press</a></li>
+                                        <li><a href="#">Usage Terms</a></li>
+                                        <li><a href="#">Privacy Policies</a></li>
+                                    </ul>
                                 </div>
-                            </div>
-                            <div class="col-sm-4 col-sm-offset-1 box">
-                                <h6>Help</h6>
-                                <p>Need help? Don’t hestiate to ask us something. Email us directly <a href="#">info@designmodo.com</a> or call us at 1-347-567-8670. You can checkout our <a href="#">FAQ</a> and <a href="#">Help</a> page to get more information about our products.</p>
-                            </div>
-                            <div class="col-sm-3 col-sm-offset-1 box">
-                                <h6>Financial Inquiries</h6>
-                                <p>As a Harvard professor, he was one of the first to explore the relationship between chemical equilibrium and the reaction rate of chemical processes.</p>
-                            </div>
+                                <div class="col-sm-4 box">
+                                    <h6>Navigation</h6>
+                                    <ul>
+                                        <li><a href="#">Register New Social Bank</a></li>
+                                        <li><a href="#">Explore Projects</a></li>
+                                        <li><a href="#">Recommended</a></li>
+                                        <li><a href="#">Newer</a></li>
+                                    </ul>
+                                </div>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -50,6 +125,7 @@
 
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrapjs")
+        @Scripts.Render("~/bundles/modernizrcustom")
         @RenderSection("scripts", required: false)
     </body>
 </html>
