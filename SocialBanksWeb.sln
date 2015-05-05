@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialBanksWeb", "SocialBanksWeb\SocialBanksWeb.csproj", "{C509222D-C7DB-417B-9C26-900C6777C8F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{007323DA-C009-42F6-9EE0-1DB6B3A54552}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialBanks.Lib", "SocialBanks.Lib\SocialBanks.Lib.csproj", "{B96257C9-5FE1-4EB0-A8BB-A2E053519095}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialBanksWeb.UnitTests", "SocialBanksWeb.UnitTests\SocialBanksWeb.UnitTests.csproj", "{0ABFF138-6153-4EEE-981B-C7DE90EBC037}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialBanks.Lib.UnitTests", "SocialBanks.Lib.UnitTests\SocialBanks.Lib.UnitTests.csproj", "{ADC020EB-5B08-4732-A459-C541FA223EE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialBanks.Lib.NetworkedTests", "SocialBanks.Lib.NetworkedTests\SocialBanks.Lib.NetworkedTests.csproj", "{2EE02EF7-B9EA-40C1-9625-063DD33CF146}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +21,22 @@ Global
 		{C509222D-C7DB-417B-9C26-900C6777C8F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C509222D-C7DB-417B-9C26-900C6777C8F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C509222D-C7DB-417B-9C26-900C6777C8F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{007323DA-C009-42F6-9EE0-1DB6B3A54552}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{007323DA-C009-42F6-9EE0-1DB6B3A54552}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{007323DA-C009-42F6-9EE0-1DB6B3A54552}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{007323DA-C009-42F6-9EE0-1DB6B3A54552}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B96257C9-5FE1-4EB0-A8BB-A2E053519095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B96257C9-5FE1-4EB0-A8BB-A2E053519095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B96257C9-5FE1-4EB0-A8BB-A2E053519095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B96257C9-5FE1-4EB0-A8BB-A2E053519095}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ABFF138-6153-4EEE-981B-C7DE90EBC037}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ABFF138-6153-4EEE-981B-C7DE90EBC037}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ABFF138-6153-4EEE-981B-C7DE90EBC037}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ABFF138-6153-4EEE-981B-C7DE90EBC037}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADC020EB-5B08-4732-A459-C541FA223EE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADC020EB-5B08-4732-A459-C541FA223EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADC020EB-5B08-4732-A459-C541FA223EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADC020EB-5B08-4732-A459-C541FA223EE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EE02EF7-B9EA-40C1-9625-063DD33CF146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EE02EF7-B9EA-40C1-9625-063DD33CF146}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EE02EF7-B9EA-40C1-9625-063DD33CF146}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EE02EF7-B9EA-40C1-9625-063DD33CF146}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

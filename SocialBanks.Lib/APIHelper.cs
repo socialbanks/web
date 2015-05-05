@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace SocialBanksWeb.Helpers
+namespace SocialBanks.Lib
 {
     public class DtoApiResponse<TDto>
     {
@@ -123,6 +123,38 @@ namespace SocialBanksWeb.Helpers
 
             result.Result = r["result"].ToString();
 
+
+            return result;
+        }
+
+        public async Task<DtoApiResponse<List<DtoAsset>>> get_credits(params string[] adresses)
+        {
+            var d = new Dictionary<string, object>();
+            d["address"] = adresses;
+
+            if (this.CauseError)
+            {
+                d["cause_error"] = true;
+            }
+
+            var r = await ParseCloud.CallFunctionAsync<Dictionary<string, object>>("get_credits", d);
+
+            var result = new DtoApiResponse<List<DtoAsset>> { };
+            result.Result = new List<DtoAsset> { };
+
+            if (r.ContainsKey("error"))
+            {
+                result.Error = r["error"] as Dictionary<string, object>;
+                return result;
+            }
+
+            var apiResult = r["result"] as List<object>;
+
+            for (int i = 0; i < apiResult.Count; i++)
+            {
+                var dicAsset = apiResult[i] as Dictionary<string, object>;
+                result.Result.Add(new DtoAsset(dicAsset["address"] as string, dicAsset["asset"] as string, (long)dicAsset["quantity"]));
+            }
 
             return result;
         }

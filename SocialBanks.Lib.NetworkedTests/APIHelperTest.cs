@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Parse;
-using SocialBanksWeb.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SocialBanks.Lib;
 
-namespace UnitTests
+namespace SocialBanks.Lib.NetworkedTests
 {
     [TestClass]
     public class APIHelperTest
@@ -38,6 +38,7 @@ namespace UnitTests
         }
 
 
+        [Todo("also bring bitcoin")]
         [TestMethod]
         public void GetBalances_Returns_2Items()
         {
@@ -57,8 +58,6 @@ namespace UnitTests
             Assert.AreEqual("XCP", result[1].Name);
             Assert.AreEqual((long)1016500000, result[1].Quantity);
 
-            //BITCOIN
-            //TODO: Retornar tambem bitcoin
         }
 
         [TestMethod]
@@ -128,6 +127,23 @@ namespace UnitTests
             var result = q.Result;
 
             Assert.IsTrue(result.Result.StartsWith("010000000"));
+
+        }
+
+        [Todo("also bring bitcoin")]
+        [TestMethod]
+        public void get_credits()
+        {
+            var q = ObjectUnderTest.get_credits("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            q.Wait();
+            var result = q.Result.Result;
+
+            Assert.AreEqual(5, result.Count);
+
+            //BRAZUCA
+            Assert.AreEqual("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", result[0].Address);
+            Assert.AreEqual("XCP", result[0].Name);
+            Assert.AreEqual((long)88500000, result[0].Quantity);
 
         }
     }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace UnitTests
+namespace SocialBanks.Lib.NetworkedTests
 {
     [TestClass]
     public class ParseConnectionTest
