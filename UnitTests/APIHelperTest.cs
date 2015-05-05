@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Parse;
 using SocialBanksWeb.Helpers;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,10 @@ namespace UnitTests
             path += "\\SocialBanksWeb\\keys.txt";
 
             ObjectUnderTest = new APIHelper(path);
+
+            //avoid "Parse.ParseException: invalid session token"
+            var task = ParseUser.LogInAsync("fabriciomatos", "123456");
+            task.Wait();
         }
 
         [TestMethod]
