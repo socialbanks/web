@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "get_balances";
+}
+
+@foreach (var it in ViewBag.ItemTest)
+{
+		 
+	
+    <div>
+        Testing getting balances for [ @string.Join(", ", it[0]) ]
+
+        <script>
+            var o = 
+                @Html.Raw(it[1])
+                ;
+                
+
+            var str = JSON.stringify(o, null, 2); 
+            document.write("<pre>");
+            document.write(str);
+            document.write("</pre>");
+        </script>
+
+    </div>
+}

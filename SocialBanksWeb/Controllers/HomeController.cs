@@ -1,35 +1,34 @@
 ﻿using Parse;
+using SocialBanksWeb.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace SocialBanksWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private const string ApplicationId_DEV = "bCOd9IKjrpxCPGYQfyagabirn7pYFjYTvJqkq1x1";
-        private const string DotnetKey_DEV = "GYMOAhUQ55yYAuEehlecpipu90RFeaPSPn3zcFZ6";
+        APIHelper APIHelper;
+        public HomeController()
+        {
+            var keysFilePath = HostingEnvironment.MapPath("~/keys.txt");
+            APIHelper = new APIHelper(keysFilePath);
+        }
 
         public async Task<ActionResult> Index()
         {
-            ParseClient.Initialize(ApplicationId_DEV, DotnetKey_DEV);
-           
-            var message = "TEST: ";
 
-            ParseObject country = await GetBrazil_Test();
-            message += "; " + country.Get<string>("name");
-
-            //ParseUser user = await RegisterNewSocialBankWithUsers();
-            //message += "; " + user.Get<string>("username");
-
-
-            ViewBag.Message = message;
+            ViewBag.Message = await APIHelper.hello();
 
             return View();
         }
+
 
         private static async Task<ParseObject> GetBrazil_Test()
         {
@@ -44,7 +43,7 @@ namespace SocialBanksWeb.Controllers
         private static async Task<ParseUser> RegisterNewSocialBankWithUsers()
         {
             //DeleteTestUser("fabriciomatos");
-            
+
             var user = new ParseUser()
             {
                 Username = "fabriciomatos",
@@ -60,14 +59,34 @@ namespace SocialBanksWeb.Controllers
             await user.SignUpAsync();
 
             return user;
-            
+
         }
 
-        public ActionResult About()
+        public async Task<ActionResult> Test_get_balances()
         {
-            ViewBag.Message = "Your app description page.";
+            var resultList = new List<object[]>();
 
+            await Test(resultList, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            await Test(resultList, "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF");
+            await Test(resultList, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF", "1sEAUJsjuYJ9P64Y2MxchwyDfw8hbQDNA");
+
+
+            ViewBag.ItemTest = resultList;
             return View();
+        }
+
+        private async Task Test(List<object[]> resultList, params string[] addresses)
+        {
+            var o = await APIHelper.get_balances(addresses);
+            var oJS = new JavaScriptSerializer();
+            var result = oJS.Serialize(o);
+
+            var it = new object[]
+            {
+                addresses,
+                result,
+            };
+            resultList.Add(it);
         }
 
         public ActionResult Contact()
