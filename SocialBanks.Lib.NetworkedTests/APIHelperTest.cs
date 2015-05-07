@@ -21,7 +21,8 @@ namespace SocialBanks.Lib.NetworkedTests
             path = string.Join("\\", pathBits, 0, (pathBits.Length - 3));
             path += "\\SocialBanksWeb\\keys.txt";
 
-            ObjectUnderTest = new APIHelper(path);
+            ObjectUnderTest = new APIHelper();
+            ObjectUnderTest.Initialize(path);
 
             //avoid "Parse.ParseException: invalid session token"
             var task = ParseUser.LogInAsync("fabriciomatos", "123456");
@@ -135,6 +136,23 @@ namespace SocialBanks.Lib.NetworkedTests
         public void get_credits()
         {
             var q = ObjectUnderTest.get_credits("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            q.Wait();
+            var result = q.Result.Result;
+
+            Assert.AreEqual(5, result.Count);
+
+            //BRAZUCA
+            Assert.AreEqual("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", result[0].Address);
+            Assert.AreEqual("XCP", result[0].Name);
+            Assert.AreEqual((long)88500000, result[0].Quantity);
+
+        }
+
+        [Todo("also bring bitcoin")]
+        [TestMethod]
+        public void get_debits()
+        {
+            var q = ObjectUnderTest.get_debits("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
             q.Wait();
             var result = q.Result.Result;
 

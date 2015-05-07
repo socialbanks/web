@@ -10,7 +10,7 @@ namespace SocialBanks.Lib.UnitTests
         public void TestMethod1()
         {
             //arrange
-            var ah = new APIHelper("")
+            var ah = new APIHelper()
             {
             };
             //act

@@ -7,63 +7,25 @@ using System.Web;
 
 namespace SocialBanks.Lib
 {
-    public class DtoApiResponse<TDto>
-    {
-        public TDto Result;
-        public Dictionary<string, object> Error;
-    }
-
-    public class DtoAsset
-    {
-        public string Address { get; private set; }
-        public string Name { get; private set; }
-        public long Quantity { get; private set; }
-
-        public DtoAsset(string address, string name, long quantity)
-        {
-            Address = address;
-            Name = name;
-            Quantity = quantity;
-        }
-    }
 
     public class APIHelper
     {
         public bool CauseError = false;
-        public APIHelper(string keysFilePath)
+        public APIHelper()
+        {
+        }
+
+        public void Initialize(string keysFilePath)
         {
             var keys = System.IO.File.ReadAllLines(keysFilePath);
             ParseClient.Initialize(keys[0], keys[1]);
         }
 
-        /*
-        public static APIHelper Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new APIHelper();
-                }
-                return instance;
-            }
-        }
-        */
 
         public async Task<string> hello()
         {
             return await ParseCloud.CallFunctionAsync<string>("hello", new Dictionary<string, object>());
         }
-
-        /*
-        public string Hello()
-        {
-            Task<string> task = ParseCloud.CallFunctionAsync<string>("hello", new Dictionary<string, object>());
-
-            task.Wait();
-            return task.Result;
-        }
-         * */
 
 
         public async Task<DtoApiResponse<List<DtoAsset>>> get_balances(params string[] adresses)
@@ -157,6 +119,11 @@ namespace SocialBanks.Lib
             }
 
             return result;
+        }
+
+        public async Task<DtoApiResponse<List<DtoAsset>>> get_debits(params string[] adresses)
+        {
+            throw new NotImplementedException();
         }
     }
 }

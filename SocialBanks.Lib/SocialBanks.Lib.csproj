@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIHelper.cs" />
+    <Compile Include="DtoApiResponse.cs" />
+    <Compile Include="DtoAsset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Todo.cs" />
   </ItemGroup>
