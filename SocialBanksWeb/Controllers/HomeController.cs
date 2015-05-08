@@ -1,5 +1,5 @@
 ﻿using Parse;
-using SocialBanksWeb.Helpers;
+using SocialBanks.Lib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,8 @@ namespace SocialBanksWeb.Controllers
         public HomeController()
         {
             var keysFilePath = HostingEnvironment.MapPath("~/keys.txt");
-            APIHelper = new APIHelper(keysFilePath);
+            APIHelper = new APIHelper();
+            APIHelper.Initialize(keysFilePath);
         }
 
         public async Task<ActionResult> Index()
