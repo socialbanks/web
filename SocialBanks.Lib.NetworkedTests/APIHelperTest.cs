@@ -149,7 +149,7 @@ namespace SocialBanks.Lib.NetworkedTests
         }
 
         [Todo("also bring bitcoin")]
-        [TestMethod]
+        [TestMethod, Ignore]
         public void get_debits()
         {
             var q = ObjectUnderTest.get_debits("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");

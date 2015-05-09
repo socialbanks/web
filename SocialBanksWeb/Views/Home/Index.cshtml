@@ -1,4 +1,13 @@
 ﻿@{
-    ViewBag.Title = "Hello";
+    ViewBag.Title = "SocialBanks";
 }
-@ViewBag.Message
+<button id="btn-create_issuance">Issue Money</button>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/bitcore/bitcore.min.js");
+    @Scripts.Render("~/Content/Scripts/HomeIndex.js")
+    <script>
+        new HomeIndex($).Ready();
+    </script>
+}
+    

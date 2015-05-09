@@ -22,13 +22,25 @@ namespace SocialBanksWeb.Controllers
             APIHelper.Initialize(keysFilePath);
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Test_hello()
         {
 
             ViewBag.Message = await APIHelper.hello();
 
             return View();
         }
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public async Task<JsonResult> create_issuance()
+        {
+            var r = await APIHelper.create_issuance("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", "BRAZUCA", 10, "desc210");
+            return Json(r,JsonRequestBehavior.AllowGet);
+        }
+
 
 
         private static async Task<ParseObject> GetBrazil_Test()
