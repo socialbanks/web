@@ -35,10 +35,16 @@ namespace SocialBanksWeb.Controllers
             return View();
         }
 
-        public async Task<JsonResult> create_issuance()
+        public async Task<JsonResult> create_issuance(string source, string asset, long quantity, string description)
         {
-            var r = await APIHelper.create_issuance("1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", "BRAZUCA", 10, "desc210");
-            return Json(r,JsonRequestBehavior.AllowGet);
+            var r = await APIHelper.create_issuance(source, asset, quantity, description);
+            return Json(r);
+        }
+
+        public async Task<JsonResult> send(string source, string asset, long quantity, string destination)
+        {
+            var r = await APIHelper.send(source, asset, quantity, destination);
+            return Json(r);
         }
 
 

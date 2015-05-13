@@ -89,6 +89,35 @@ namespace SocialBanks.Lib
             return result;
         }
 
+        public async Task<DtoApiResponse<string>> send(string source, string asset, long quantity, string destination)
+        {
+            var d = new Dictionary<string, object>();
+            d["source"] = source;
+            d["asset"] = asset;
+            d["quantity"] = quantity;
+            d["destination"] = destination;
+
+            if (this.CauseError)
+            {
+                d["cause_error"] = true;
+            }
+
+            var r = await ParseCloud.CallFunctionAsync<Dictionary<string, object>>("send", d);
+
+            var result = new DtoApiResponse<string> { };
+
+            if (r.ContainsKey("error"))
+            {
+                result.Error = r["error"] as Dictionary<string, object>;
+                return result;
+            }
+
+            result.Result = r["result"].ToString();
+
+
+            return result;
+        }
+
         public async Task<DtoApiResponse<List<DtoAsset>>> get_credits(params string[] adresses)
         {
             var d = new Dictionary<string, object>();
