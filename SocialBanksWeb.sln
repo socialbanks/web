@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialBanks.Lib.UnitTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialBanks.Lib.NetworkedTests", "SocialBanks.Lib.NetworkedTests\SocialBanks.Lib.NetworkedTests.csproj", "{2EE02EF7-B9EA-40C1-9625-063DD33CF146}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialBanksWeb.Sandbox", "SocialBanksWeb.Sandbox\SocialBanksWeb.Sandbox.csproj", "{5D5786C8-2A6D-4BB7-9876-4D85B8BD677C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{2EE02EF7-B9EA-40C1-9625-063DD33CF146}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EE02EF7-B9EA-40C1-9625-063DD33CF146}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EE02EF7-B9EA-40C1-9625-063DD33CF146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D5786C8-2A6D-4BB7-9876-4D85B8BD677C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D5786C8-2A6D-4BB7-9876-4D85B8BD677C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D5786C8-2A6D-4BB7-9876-4D85B8BD677C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D5786C8-2A6D-4BB7-9876-4D85B8BD677C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
