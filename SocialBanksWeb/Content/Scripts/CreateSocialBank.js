@@ -1,4 +1,4 @@
-﻿function CreateSocialBank() {
+﻿function CreateSocialBank($) {
     var self = this;
 
     this.Ready = function () {
@@ -6,7 +6,22 @@
     }
 
     this.Click_create = function () {
-        alert(0);
+        $.ajax(
+            {
+                url: 'createSocialBank',
+                method:'POST',
+                data:
+                    {
+                        name: "a",
+                        socialMoneyName:"AAAA",
+                    },
+                success: self.success_createSocialBank
+            }
+            );
+    }
+
+    this.success_createSocialBank = function (response) {
+        console.log(response);
     }
 
 }

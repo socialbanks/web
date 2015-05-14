@@ -91,11 +91,13 @@ namespace SocialBanks.Lib.NetworkedTests
 
                 socialBank["name"] = "Social Bank Test #" + i.ToString("D3");
                 socialBank["description"] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-
-                ParseFile file = new ParseFile("socialbanks.jpeg", getImageBytes());
-                var taskFile = file.SaveAsync();
-                taskFile.Wait();
-                socialBank["image"] = file;
+                if (false)
+                {
+                    ParseFile file = new ParseFile("socialbanks.jpeg", getImageBytes());
+                    var taskFile = file.SaveAsync();
+                    taskFile.Wait();
+                    socialBank["image"] = file;
+                }
 
                 socialBank["address"] = "Rua Fulano de Tal, N 725, Itarare, Vitoria-ES, Brazil";
                 socialBank["zipcode"] = "29000-000";
