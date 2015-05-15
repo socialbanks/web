@@ -13,6 +13,9 @@ namespace SocialBanks.Lib.NetworkedTests
     public class APIHelperTest
     {
         APIHelper ObjectUnderTest;
+
+        private static ParseUser CurrentUser;
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -27,6 +30,7 @@ namespace SocialBanks.Lib.NetworkedTests
             //avoid "Parse.ParseException: invalid session token"
             var task = ParseUser.LogInAsync("fabriciomatos", "123456");
             task.Wait();
+            CurrentUser = task.Result;
         }
 
         [TestMethod]
@@ -168,12 +172,13 @@ namespace SocialBanks.Lib.NetworkedTests
         [TestMethod]
         public void SendSocialMoneyFromNotOwnedWallet()
         {
-            decimal value = 10.15m;
-            var q = ObjectUnderTest.send_social_money("BRAZUCA", "addr1", "addr3", (int)Math.Truncate(value * 100), "Wallmart", "tx_id", "tx....");
+            var valueInCents = 1;
+            var addrA = "addr1";
+            var addrB = "addrF";
 
             try
             {
-                q.Wait();
+                AddNewTransaction(valueInCents, addrA, addrB);
             }
             catch (System.AggregateException e)
             {
@@ -191,17 +196,18 @@ namespace SocialBanks.Lib.NetworkedTests
         [TestMethod]
         public void SendSocialMoneyFromWalletWithoutSufficientBalance()
         {
-            decimal value = 1000m;
-            var q = ObjectUnderTest.send_social_money("BRAZUCA", "addrF", "addr3", (int)Math.Truncate(value * 100), "Wallmart", "tx_id", "tx....");
+            var valueInCents = 1000000;
+            var addrA = "addrF";
+            var addrB = "addr1";
 
             try
             {
-                q.Wait();
+                AddNewTransaction(valueInCents, addrA, addrB);
             }
             catch (System.AggregateException e)
             {
                 Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
-                Assert.AreEqual("Wallet don't have sufficient balance to withdraw 100000", e.InnerException.Message);
+                Assert.AreEqual("Wallet don't have sufficient balance to withdraw 1000000", e.InnerException.Message);
                 return;
             }
             catch (Exception e)
@@ -211,16 +217,16 @@ namespace SocialBanks.Lib.NetworkedTests
             Assert.Fail("Exeption expected");
         }
 
-
         [TestMethod]
         public void SendSocialMoneyToAnotherBankWallet()
         {
-            decimal value = 1m;
-            var q = ObjectUnderTest.send_social_money("BRAZUCA", "addrF", "addr2", (int)Math.Truncate(value * 100), "Wallmart", "tx_id", "tx....");
+            var valueInCents = 1;
+            var addrA = "addrF";
+            var addrB = "addr2";
 
             try
             {
-                q.Wait();
+                AddNewTransaction(valueInCents, addrA, addrB);
             }
             catch (System.AggregateException e)
             {
@@ -233,22 +239,6 @@ namespace SocialBanks.Lib.NetworkedTests
                 throw e;
             }
             Assert.Fail("Exeption expected");
-        }
-
-
-        public int GetWalletBalance(string address)
-        {
-
-            var query = from wallet in ParseObject.GetQuery("Wallet")
-                        where wallet.Get<string>("bitcoinAddress") == address
-                        select wallet;
-            var q = query.FindAsync();
-            q.Wait();
-
-
-            ParseObject obj = q.Result.First<ParseObject>();
-
-            return obj.Get<int>("balance");
         }
 
         [TestMethod]
@@ -281,25 +271,58 @@ namespace SocialBanks.Lib.NetworkedTests
         }
 
         [TestMethod]
-        public void SendSocialMoneyWorks()
+        public void TransactionShouldUpdateBalances()
         {
-            var senderOriginalBalance = GetWalletBalance("addrF");
-            var receiverOriginalBalance = GetWalletBalance("addr1");
+            var valueInCents = 1;
+            var addrA = "addrF";
+            var addrB = "addr1";
 
+            var senderOriginalBalance = GetWalletBalance(addrA);
+            var receiverOriginalBalance = GetWalletBalance(addrB);
 
-            decimal value = 0.01m;
-            int valueInCents = (int)Math.Truncate(value * 100);
-            var q = ObjectUnderTest.send_social_money("BRAZUCA", "addrF", "addr1", valueInCents, "Wallmart", "tx_id", "tx....");
-            q.Wait();
-            var result = q.Result.Result;
+            AddNewTransaction(valueInCents, addrA, addrB);
 
-            var senderBalance = GetWalletBalance("addrF");
-            var receiverBalance = GetWalletBalance("addr1");
+            var senderBalance = GetWalletBalance(addrA);
+            var receiverBalance = GetWalletBalance(addrB);
 
             Assert.AreEqual(senderBalance, senderOriginalBalance - valueInCents, "Sender balance");
             Assert.AreEqual(receiverBalance, receiverOriginalBalance + valueInCents, "Receiver balance");
-            //Assert.AreEqual("", result);
         }
 
+        private void AddNewTransaction(int valueInCents, string addrA, string addrB)
+        {
+            var senderWallet = GetWalletByAddress(addrA);
+            var receiverWallet = GetWalletByAddress(addrB);
+
+            ParseObject tran = new ParseObject("Transaction");
+            tran["value"] = valueInCents;
+            tran["senderDescription"] = "Wallmart Test";
+            tran["senderWallet"] = senderWallet;
+            tran["receiverWallet"] = receiverWallet;
+            tran["user"] = CurrentUser;
+
+            var q = tran.SaveAsync();
+            q.Wait();
+        }
+
+        public ParseObject GetWalletByAddress(string address)
+        {
+
+            var query = from wallet in ParseObject.GetQuery("Wallet")
+                        where wallet.Get<string>("bitcoinAddress") == address
+                        select wallet;
+            var q = query.FindAsync();
+            q.Wait();
+
+
+            return q.Result.First<ParseObject>();
+        }
+
+        public int GetWalletBalance(string address)
+        {
+            var wallet = GetWalletByAddress(address);
+
+            return wallet.Get<int>("balance");
+        }
     }
 }
