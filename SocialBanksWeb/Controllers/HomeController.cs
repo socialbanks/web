@@ -31,12 +31,17 @@ namespace SocialBanksWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult CreateSocialBank(SocialBankModel sb)
+        public JsonResult PostCreateSocialBank()
         {
+            var f = Request.Form;
+
             var socialBank = new ParseObject("SocialBank");
 
-            socialBank["name"] = "Social Bank Test ";
-            socialBank["socialMoneyName"] = "MOEDA";
+            foreach (var k in f.AllKeys)
+            {
+                socialBank[k] = f[k];
+            }
+
             socialBank.SaveAsync().Wait();
 
             return Json("success");

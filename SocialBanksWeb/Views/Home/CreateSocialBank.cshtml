@@ -4,7 +4,7 @@
 }
 
 <h2>Create a New Social Bank</h2>
-<div>
+<form id="form-create">
     <label>Social Bank's name:</label>
     <input type="text" id="name" name="name" value="" />
     <label>Social Money:</label>
@@ -12,7 +12,16 @@
 
     It needs to be different from the social bank's name.
 
-</div>
+    <label>Social Bank's description:</label>
+    <textarea id="description" name="description"></textarea>
+
+    <label>Social Bank's address:</label>
+    <textarea id="address" name="address"></textarea>
+
+    <label>Zip Code:</label>
+    <input type="text" id="zipcode" name="zipcode" value="" />
+
+</form>
 
 <button id="btn-create">CREATE NEW SOCIAL BANK</button>
 @section Scripts {

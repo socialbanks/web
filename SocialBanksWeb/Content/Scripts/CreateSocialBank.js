@@ -6,15 +6,13 @@
     }
 
     this.Click_create = function () {
+        var data = $('#form-create').serialize();
+        
         $.ajax(
             {
-                url: 'createSocialBank',
+                url: 'PostCreateSocialBank',
                 method:'POST',
-                data:
-                    {
-                        name: "a",
-                        socialMoneyName:"AAAA",
-                    },
+                data: data,
                 success: self.success_createSocialBank
             }
             );
