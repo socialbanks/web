@@ -164,5 +164,142 @@ namespace SocialBanks.Lib.NetworkedTests
             Assert.AreEqual((long)88500000, result[0].Quantity);
 
         }
+
+        [TestMethod]
+        public void SendSocialMoneyFromNotOwnedWallet()
+        {
+            decimal value = 10.15m;
+            var q = ObjectUnderTest.send_social_money("BRAZUCA", "addr1", "addr3", (int)Math.Truncate(value * 100), "Wallmart", "tx_id", "tx....");
+
+            try
+            {
+                q.Wait();
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("User tried to access another user wallet", e.InnerException.Message);
+                return; 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+        }
+
+        [TestMethod]
+        public void SendSocialMoneyFromWalletWithoutSufficientBalance()
+        {
+            decimal value = 1000m;
+            var q = ObjectUnderTest.send_social_money("BRAZUCA", "addrF", "addr3", (int)Math.Truncate(value * 100), "Wallmart", "tx_id", "tx....");
+
+            try
+            {
+                q.Wait();
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Wallet don't have sufficient balance to withdraw 100000", e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+        }
+
+
+        [TestMethod]
+        public void SendSocialMoneyToAnotherBankWallet()
+        {
+            decimal value = 1m;
+            var q = ObjectUnderTest.send_social_money("BRAZUCA", "addrF", "addr2", (int)Math.Truncate(value * 100), "Wallmart", "tx_id", "tx....");
+
+            try
+            {
+                q.Wait();
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Receiver wallet isn't of the same social bank currency", e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+        }
+
+
+        public int GetWalletBalance(string address)
+        {
+
+            var query = from wallet in ParseObject.GetQuery("Wallet")
+                        where wallet.Get<string>("bitcoinAddress") == address
+                        select wallet;
+            var q = query.FindAsync();
+            q.Wait();
+
+
+            ParseObject obj = q.Result.First<ParseObject>();
+
+            return obj.Get<int>("balance");
+        }
+
+        [TestMethod]
+        public void WalletIsReadOnly()
+        {
+
+            var query = from wallet in ParseObject.GetQuery("Wallet")
+                        where wallet.Get<string>("bitcoinAddress") == "addrF"
+                        select wallet;
+            var q = query.FindAsync();
+            q.Wait();
+
+
+            ParseObject obj = q.Result.First<ParseObject>();
+
+            obj["balance"] = obj.Get<int>("balance") + 1000;
+
+            var t = obj.SaveAsync();
+
+            try
+            {
+                t.Wait();
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual("This user is not allowed to perform the update operation on Wallet. You can change this setting in the Data Browser.", e.InnerException.Message);
+                return;
+            }
+            Assert.Fail("Exception Expected");
+        }
+
+        [TestMethod]
+        public void SendSocialMoneyWorks()
+        {
+            var senderOriginalBalance = GetWalletBalance("addrF");
+            var receiverOriginalBalance = GetWalletBalance("addr1");
+
+
+            decimal value = 0.01m;
+            int valueInCents = (int)Math.Truncate(value * 100);
+            var q = ObjectUnderTest.send_social_money("BRAZUCA", "addrF", "addr1", valueInCents, "Wallmart", "tx_id", "tx....");
+            q.Wait();
+            var result = q.Result.Result;
+
+            var senderBalance = GetWalletBalance("addrF");
+            var receiverBalance = GetWalletBalance("addr1");
+
+            Assert.AreEqual(senderBalance, senderOriginalBalance - valueInCents, "Sender balance");
+            Assert.AreEqual(receiverBalance, receiverOriginalBalance + valueInCents, "Receiver balance");
+            //Assert.AreEqual("", result);
+        }
+
     }
 }

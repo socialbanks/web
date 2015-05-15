@@ -154,5 +154,39 @@ namespace SocialBanks.Lib
         {
             throw new NotImplementedException();
         }
+
+        public async Task<DtoApiResponse<string>> send_social_money(string asset, string senderAddress, string receiverAddress,
+            int valueInCents, string description, string txId, string signedRawTransaction)
+        {
+            var d = new Dictionary<string, object>();
+            //d["asset"] = asset;
+            d["senderAddress"] = senderAddress;
+            d["receiverAddress"] = receiverAddress;
+            d["valueInCents"] = valueInCents;
+            d["description"] = description;
+            d["txId"] = txId;
+            d["signedRawTransaction"] = signedRawTransaction;
+
+            if (this.CauseError)
+            {
+                d["cause_error"] = true;
+            }
+
+            var r = await ParseCloud.CallFunctionAsync<string>("send_social_money", d);
+
+            var result = new DtoApiResponse<string> { };
+
+            //if (r.ContainsKey("error"))
+            //{
+            //    result.Error = r["error"] as Dictionary<string, object>;
+            //    return result;
+            //}
+
+            result.Result = r;
+
+            return result;
+        }
+
+        
     }
 }
