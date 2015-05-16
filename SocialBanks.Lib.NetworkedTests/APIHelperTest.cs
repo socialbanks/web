@@ -222,7 +222,7 @@ namespace SocialBanks.Lib.NetworkedTests
         {
             var valueInCents = 1;
             var addrA = "addrF";
-            var addrB = "addr2";
+            var addrB = "addr5";
 
             try
             {
@@ -324,5 +324,133 @@ namespace SocialBanks.Lib.NetworkedTests
 
             return wallet.Get<int>("balance");
         }
+
+        [TestMethod]
+        public void IssuanceOfZeroValueShouldFail()
+        {
+            var socialBankId = "wRYoCHo6Bq";
+            var valueInCents = 0;
+
+            var socialBankBefore = GetSoialBank(socialBankId);
+
+            try
+            {
+                AddNewIssuance(valueInCents, CurrentUser, socialBankBefore, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Invalid issuance value: 0", e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+
+        }
+
+        [TestMethod]
+        public void IssuanceOfNegativeValueShouldFail()
+        {
+            var socialBankId = "wRYoCHo6Bq";
+            var valueInCents = -1;
+
+            var socialBankBefore = GetSoialBank(socialBankId);
+
+            try
+            {
+                AddNewIssuance(valueInCents, CurrentUser, socialBankBefore, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Invalid issuance value: -1", e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+
+        }
+
+        [TestMethod]
+        public void IssuanceOfMoreThen10000000ShouldFail()
+        {
+            var socialBankId = "wRYoCHo6Bq";
+            var valueInCents = 10000000 + 1;
+
+            var socialBankBefore = GetSoialBank(socialBankId);
+
+            try
+            {
+                AddNewIssuance(valueInCents, CurrentUser, socialBankBefore, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Issuance value exceded the limit of 10000000: " + valueInCents.ToString(), e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+
+        }
+
+        
+        [TestMethod]
+        public void IssuanceShouldUpdateSocialBankBalances()
+        {
+            var socialBankId = "wRYoCHo6Bq";
+            var valueInCents = 100000;
+
+            var socialBankBefore = GetSoialBank(socialBankId);
+
+            AddNewIssuance(valueInCents, CurrentUser, socialBankBefore, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+
+            var socialBankAfter = GetSoialBank(socialBankId);
+
+            Assert.AreEqual(socialBankAfter.Get<int>("totalIssuedSocialMoney"), valueInCents + socialBankBefore.Get<int>("totalIssuedSocialMoney"));
+            Assert.AreEqual(socialBankAfter.Get<int>("totalActiveSocialMoney"), valueInCents + socialBankBefore.Get<int>("totalActiveSocialMoney"));
+            Assert.AreEqual(socialBankAfter.Get<int>("onlineSocialMoneyBalance"), valueInCents + socialBankBefore.Get<int>("onlineSocialMoneyBalance"));
+        }
+
+        private void AddNewIssuance(int valueInCents, ParseObject bankOfficerUser, ParseObject socialBank, string issuanceBitcoinAddress)
+        {
+            ParseObject tran = new ParseObject("SocialMoneyIssuance");
+            tran["value"] = valueInCents;
+            tran["socialBank"] = socialBank;
+            tran["bankOfficerUser"] = bankOfficerUser;
+            tran["comment"] = "Issuance Unit Test";
+            tran["issuanceBitcoinAddress"] = issuanceBitcoinAddress;
+
+            var q = tran.SaveAsync();
+            q.Wait();
+        }
+
+        public ParseObject GetSoialBank(string socialBankId)
+        {
+            return GetObjectById("SocialBank", socialBankId);
+        }
+
+        public ParseObject GetObjectById(string className, string id)
+        {
+
+            var query = from instance in ParseObject.GetQuery(className)
+                        where instance.Get<string>("objectId") == id
+                        select instance;
+            var q = query.FindAsync();
+            q.Wait();
+
+
+            return q.Result.First<ParseObject>();
+        }
+
     }
 }
