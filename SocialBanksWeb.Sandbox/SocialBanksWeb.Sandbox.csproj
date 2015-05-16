@@ -335,6 +335,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Test_get_balances.cshtml" />
     <Content Include="Views\Home\Test_hello.cshtml" />
+    <Content Include="Views\Home\TestFabricio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -187,6 +187,5 @@ namespace SocialBanks.Lib
             return result;
         }
 
-        
     }
 }

@@ -35,6 +35,11 @@ namespace SocialBanksWeb.Controllers
             return View();
         }
 
+        public ActionResult TestFabricio()
+        {
+            return View();
+        }
+
         public async Task<JsonResult> create_issuance(string source, string asset, long quantity, string description)
         {
             var r = await APIHelper.create_issuance(source, asset, quantity, description);
