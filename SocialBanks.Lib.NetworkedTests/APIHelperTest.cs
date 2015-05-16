@@ -452,5 +452,20 @@ namespace SocialBanks.Lib.NetworkedTests
             return q.Result.First<ParseObject>();
         }
 
+
+        //[TestMethod]
+        public void bitcore()
+        {
+            var d = new Dictionary<string, object>();
+            //d["source"] = source;
+
+            var r = ParseCloud.CallFunctionAsync<string>("create_wallet", d);
+
+            r.Wait();
+
+            Assert.AreEqual("TESTE", r.Result);
+        }
+        
+
     }
 }
