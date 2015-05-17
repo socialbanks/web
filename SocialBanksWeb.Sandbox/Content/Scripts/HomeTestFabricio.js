@@ -4,14 +4,19 @@
     self.Passphrase = "";
 
     bitcore = require('bitcore');
+    var explorer = require('bitcore-explorers');
 
     this.CreateKeys = function () {
         console.log('Test');
-
+        
         //address = 1JeMty246HPfyGJEUJqswmP8xQUiCqUjMA
         var privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716cca0000000000');
+        console.log(privateKey);
 
         var publicKey = privateKey.toPublicKey();
+        console.log(publicKey);
+        console.log(publicKey.toString());
+
         var address = publicKey.toAddress(bitcore.Networks.livenet);
 
         if (bitcore.Address.isValid(address)) {
@@ -23,7 +28,6 @@
     }
 
     this.CreateTransaction = function () {
-
         var receiverAddress = "1FTuKcjGUrMWatFyt8i1RbmRzkY2V9TDMG"; //Fabricio Bread Wallet (iPhone)
 
         //TODO: how can I get the unspent transactions?
@@ -73,29 +77,135 @@
         console.log(transaction.serialize());
     }
 
-    this.SendBrazuca = function () {
-        this.InvokeParse('hello', {});
+    
+    //avulso => counterparty
+    this.SendBrazuca1 = function () {
+        var privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716cca0000000000');
+        var senderPublicKey = privateKey.toPublicKey();
+        var senderAddress = senderPublicKey.toAddress(bitcore.Networks.livenet);
 
-        this.InvokeParse('send', {
-            "source": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
-            "destination": "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF",
-            "quantity": 100000000, //1 BRAZUCA (in brazuca's satoshi)
-            "asset": "BRAZUCA",
+        // After installing the Parse SDK above, intialize it with your Parse application ID and key below
+        Parse.initialize("bCOd9IKjrpxCPGYQfyagabirn7pYFjYTvJqkq1x1", "mu3goJMujN0svROX9d1ssE0R7N4q1r3mC9FR8ejP");
+
+        // Call the Cloud Code 'yodaSpeakFunction'
+        Parse.Cloud.run('send', 
+            {
+                "source": "1JeMty246HPfyGJEUJqswmP8xQUiCqUjMA",
+                "destination": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
+                "quantity": 1500000000,
+                "asset": "BRAZUCA",
+                "pubkey": senderPublicKey.toString()
+                
+            },
+            {
+                success: function (result) {
+                    console.log("#success");
+                    console.log(result);
+
+                    var rawTx = result.result;
+                    console.log(rawTx);
+
+                    var trans = new bitcore.Transaction(rawTx);
+
+                    if (trans.outputs.count == 4) {
+                        trans.outputs.splice(1, 2);
+                    }
+
+                    console.log(trans);
+                    console.log("hasAllUtxoInfo");
+                    console.log(trans.hasAllUtxoInfo());
+                    console.log(trans.inputs[0]);
+                    console.log(trans.inputs[0].outputs);
+
+                    //trans.hasAllUtxoInfo = function () { return true; };
+
+                    console.log("proxima linha com erro!");
+                    var signedTx = trans.sign(privateKey);
+
+                    //this.broadcast(signedTx);
+                },
+                error: function (error) {
+                    console.log("#error");
+                    console.log(error);
+                }
+
+            }
+        );
+
+    }
+
+    //counterparty => counterparty
+    this.SendBrazuca2 = function () {
+        //chave privada da 1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK (counterparty)
+        var privateKey = new bitcore.PrivateKey('L2BkJmqFfEuDiaGxcTmA8vrrZnvoP523SMrZKzB8seHjKPwYX8Df');
+        var senderPublicKey = privateKey.toPublicKey();
+        var senderAddress = senderPublicKey.toAddress(bitcore.Networks.livenet);
+
+        //console.log(senderPublicKey.toBuffer());
+        //console.log(bitcore.Crypto.Hash.sha256(senderPublicKey.toBuffer()));
+
+        // After installing the Parse SDK above, intialize it with your Parse application ID and key below
+        Parse.initialize("bCOd9IKjrpxCPGYQfyagabirn7pYFjYTvJqkq1x1", "mu3goJMujN0svROX9d1ssE0R7N4q1r3mC9FR8ejP");
+
+        Parse.Cloud.run('send',
+            {
+                "source": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
+                "destination": "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF",
+                "quantity": 1500000000,
+                "asset": "BRAZUCA",
+                "pubkey": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK" //should be the: hex(sha256(pubkey))
+
+            },
+            {
+                success: function (result) {
+                    console.log("#success");
+                    console.log(result);
+
+                    var rawTx = result.result;
+                    console.log(rawTx);
+
+                    var trans = new bitcore.Transaction(rawTx);
+
+                    if (trans.outputs.count == 4) {
+                        trans.outputs.splice(1, 2);
+                    }
+
+                    //console.log(trans);
+                    //console.log("hasAllUtxoInfo");
+                    //console.log(trans.hasAllUtxoInfo());
+                    //console.log(trans.inputs[0]);
+                    //console.log(trans.inputs[0].outputs);
+
+                    console.log("proxima linha com erro!");
+                    var signedTx = trans.sign(privateKey);
+
+                    //this.broadcast(signedTx);
+                },
+                error: function (error) {
+                    console.log("#error");
+                    console.log(error);
+                }
+
+            }
+        );
+
+    }
+
+    this.RunAll = function () {
+        this.CreateKeys();
+        //this.CreateTransaction();
+        //this.SendBrazuca1();
+        this.SendBrazuca2();
+    }
+
+    this.broadcast = function (tx) {
+        insight.broadcast(tx, function (err, txid) {
+            if (err != null) {
+                window.console.log('Broadcast Error:', err);
+            } else {
+                window.console.log('txid:', txid);
+            }
         });
-
-        //this.InvokeCounterparty(
-        //        "create_send",
-        //         {
-        //             "source": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", 
-        //             "destination": "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF", 
-        //             "quantity":100000000, 
-        //             "asset": "BRAZUCA", 
-        //             "allow_unconfirmed_inputs":"True",
-        //             "fee":0, 
-        //             "encoding":"pubkeyhash"
-        //         }
-        //    );
-
     }
 
     this.InvokeCounterparty = function (method, params) {
@@ -123,6 +233,23 @@
             }
         });
     }
+
+
+    /*
+
+var Transaction = require('bitcore').Transaction;
+
+var t = new Transaction()
+  .from({"address":"3BazTqvkvEBcWk7J4sbgRnxUw6rjYrogf9","txid":"dc2e197ab72f71912c39bc23a42d823a3aa8d469fe65eb591c086e60d14c64a0","vout":0,"ts":1418878014,"scriptPubKey":"a9146c8d8b04c6a1e664b1ec20ec932760760c97688e87","amount":0.00300299,"confirmationsFromCache":false}, ["020483ebb834d91d494a3b649cf0e8f5c9c4fcec5f194ab94341cc99bb440007f2", "0271ebaeef1c2bf0c1a4772d1391eab03e4d96a6e9b48551ab4e4b0d2983eb452b", "03a659828aabe443e2dedabb1db5a22335c5ace5b5b7126998a288d63c99516dd8"], 2)
+  .to("38nw4sTs3fCH1YiBjYeQAX1t9eWMxpek8Z", 150000)
+  .change("3BazTqvkvEBcWk7J4sbgRnxUw6rjYrogf9")
+  .sign("L2U9m5My3cdyN5qX1PH4B7XstGDZFWwyukdX8gj8vsJ3fkrqArQo") // Also tested without this step
+  .fee(13400);
+
+console.log(t.toJSON());
+
+
+
 
     this.InvokeParse = function (method, params) {
         $.ajax({
@@ -156,15 +283,8 @@
             }
         });
     }
+    */
 
-
-
-
-    this.RunAll = function () {
-        this.CreateKeys();
-        this.CreateTransaction();
-        this.SendBrazuca();
-    }
 
     /*
     

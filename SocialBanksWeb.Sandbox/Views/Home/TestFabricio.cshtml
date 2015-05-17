@@ -8,8 +8,12 @@
 
 
 @section Scripts {
+    @Scripts.Render("http://www.parsecdn.com/js/parse-1.2.12.min.js")
     @Scripts.Render("~/Scripts/bitcore/bitcore.js");
+    @Scripts.Render("~/Scripts/bitcore-explorers/bitcore-explorers.js");
+    @Scripts.Render("~/Scripts/bitcore-mnemonic/bitcore-mnemonic.js");
     @Scripts.Render("~/Content/Scripts/HomeTestFabricio.js")
+
     <script>
         new HomeTestFabricio($).RunAll();
     </script>
