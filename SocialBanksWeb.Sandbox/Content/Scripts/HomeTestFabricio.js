@@ -3,8 +3,8 @@
 
     self.Passphrase = "";
 
-    bitcore = require('bitcore');
-    var explorer = require('bitcore-explorers');
+    //bitcore = require('bitcore');
+    //var explorer = require('bitcore-explorers');
 
     this.CreateKeys = function () {
         console.log('Test');
@@ -139,7 +139,19 @@
         //chave privada da 1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK (counterparty)
         var privateKey = new bitcore.PrivateKey('L2BkJmqFfEuDiaGxcTmA8vrrZnvoP523SMrZKzB8seHjKPwYX8Df');
         var senderPublicKey = privateKey.toPublicKey();
-        var senderAddress = senderPublicKey.toAddress(bitcore.Networks.livenet);
+
+        console.log(senderPublicKey);
+        console.log(senderPublicKey.toString());
+        var pubk2 = new bitcore.PublicKey(senderPublicKey.toString());
+        console.log(pubk2);
+        console.log(pubk2.toJSON());
+
+
+        var senderAddress = pubk2.toAddress(bitcore.Networks.livenet);
+
+        console.log('senderAddress');
+        console.log(senderAddress);
+        console.log(senderAddress.toString());
 
         //console.log(senderPublicKey.toBuffer());
         //console.log(bitcore.Crypto.Hash.sha256(senderPublicKey.toBuffer()));
@@ -147,36 +159,48 @@
         // After installing the Parse SDK above, intialize it with your Parse application ID and key below
         Parse.initialize("bCOd9IKjrpxCPGYQfyagabirn7pYFjYTvJqkq1x1", "mu3goJMujN0svROX9d1ssE0R7N4q1r3mC9FR8ejP");
 
+
         Parse.Cloud.run('send',
             {
                 "source": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
                 "destination": "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF",
                 "quantity": 1500000000,
                 "asset": "BRAZUCA",
-                "pubkey": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK" //should be the: hex(sha256(pubkey))
+                //"pubkey": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK" //should be the: hex(sha256(pubkey))
+                //"pubkey": senderPublicKey.toString()
 
             },
             {
                 success: function (result) {
                     console.log("#success");
                     console.log(result);
+                    if (result.error) {
+                        console.log("#error");
+                        console.log(result.error);
+                        return;
+                    }
 
                     var rawTx = result.result;
                     console.log(rawTx);
 
                     var trans = new bitcore.Transaction(rawTx);
 
-                    if (trans.outputs.count == 4) {
+                    /*if (trans.outputs.count == 4) {
                         trans.outputs.splice(1, 2);
-                    }
+                    }*/
 
-                    //console.log(trans);
-                    //console.log("hasAllUtxoInfo");
-                    //console.log(trans.hasAllUtxoInfo());
-                    //console.log(trans.inputs[0]);
-                    //console.log(trans.inputs[0].outputs);
+                    console.log('trans');
+                    console.log(trans);
 
-                    console.log("proxima linha com erro!");
+                    console.log("hasAllUtxoInfo");
+                    console.log(trans.hasAllUtxoInfo());
+
+                    //return;
+                    trans.inputs[0].addSignature(privateKey);
+
+                    console.log('trans.inputs[0].isValidSignature()');
+                    console.log(trans.inputs[0].isValidSignature());
+
                     var signedTx = trans.sign(privateKey);
 
                     //this.broadcast(signedTx);
@@ -191,11 +215,66 @@
 
     }
 
+    this.SendBrazuca3 = function () {
+
+        console.log('SendBrazuca3');
+        var w = new CWHierarchicalKey('passphrase')
+
+        console.log(w);
+
+        var privateKey0 = w.getAddressKey(0);
+        console.log(privateKey0);
+
+        // After installing the Parse SDK above, intialize it with your Parse application ID and key below
+        Parse.initialize("bCOd9IKjrpxCPGYQfyagabirn7pYFjYTvJqkq1x1", "mu3goJMujN0svROX9d1ssE0R7N4q1r3mC9FR8ejP");
+
+
+        Parse.Cloud.run('send',
+            {
+                "source": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
+                "destination": "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF",
+                "quantity": 100000000,
+                "asset": "BRAZUCA",
+                //"pubkey": senderPublicKey.toString()
+
+            },
+            {
+                success: function (result) {
+                    console.log("#success");
+                    console.log(result);
+                    if (result.error) {
+                        console.log("#error");
+                        console.log(result.error);
+                        return;
+                    }
+
+                    var rawTx = result.result;
+                    console.log(rawTx);
+
+                    var signedHEX = privateKey0.signRawTransaction(rawTx);
+
+                    console.log(signedHEX);
+
+                    var signedTx = new bitcore.Transaction(signedHEX);
+
+                    //this.broadcast(signedTx);
+                },
+                error: function (error) {
+                    console.log("#error");
+                    console.log(error);
+                }
+
+            }
+        );
+
+    }
+
     this.RunAll = function () {
-        this.CreateKeys();
+        //this.CreateKeys();
         //this.CreateTransaction();
         //this.SendBrazuca1();
-        this.SendBrazuca2();
+        //this.SendBrazuca2();
+        this.SendBrazuca3();
     }
 
     this.broadcast = function (tx) {

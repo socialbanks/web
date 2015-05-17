@@ -9,9 +9,15 @@
 
 @section Scripts {
     @Scripts.Render("http://www.parsecdn.com/js/parse-1.2.12.min.js")
-    @Scripts.Render("~/Scripts/bitcore/bitcore.js");
-    @Scripts.Render("~/Scripts/bitcore-explorers/bitcore-explorers.js");
-    @Scripts.Render("~/Scripts/bitcore-mnemonic/bitcore-mnemonic.js");
+
+@*  
+    @Scripts.Render("~/Scripts/bitcore/bitcore.js")
+    @Scripts.Render("~/Scripts/bitcore-explorers/bitcore-explorers.js")
+    @Scripts.Render("~/Scripts/bitcore-mnemonic/bitcore-mnemonic.js")
+*@
+    @Scripts.Render("~/Scripts/counterwallet/counterwallet-deps-min.js?v=29c7e25225c0")
+    @Scripts.Render("~/Scripts/counterwallet/counterwallet-min.js?v=bb663287cde1")
+
     @Scripts.Render("~/Content/Scripts/HomeTestFabricio.js")
 
     <script>
