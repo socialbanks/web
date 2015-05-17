@@ -1,4 +1,5 @@
-﻿using Parse;
+﻿using Info.Blockchain.API.PushTx;
+using Parse;
 using SocialBanks.Lib;
 using System;
 using System.Collections.Generic;
@@ -112,6 +113,15 @@ namespace SocialBanksWeb.Controllers
             };
             resultList.Add(it);
         }
+
+        [HttpPost]
+        public JsonResult PostTx(string txHexa)
+        {
+            PushTx.PushTransaction(txHexa); 
+            return Json("success");
+        }
+
+
 
     }
 }
