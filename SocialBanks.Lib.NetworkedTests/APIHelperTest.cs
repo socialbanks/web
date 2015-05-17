@@ -13,6 +13,9 @@ namespace SocialBanks.Lib.NetworkedTests
     public class APIHelperTest
     {
         APIHelper ObjectUnderTest;
+
+        private static ParseUser CurrentUser;
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -27,6 +30,7 @@ namespace SocialBanks.Lib.NetworkedTests
             //avoid "Parse.ParseException: invalid session token"
             var task = ParseUser.LogInAsync("fabriciomatos", "123456");
             task.Wait();
+            CurrentUser = task.Result;
         }
 
         [TestMethod]
@@ -164,5 +168,289 @@ namespace SocialBanks.Lib.NetworkedTests
             Assert.AreEqual((long)88500000, result[0].Quantity);
 
         }
+
+        [TestMethod]
+        public void SendSocialMoneyFromNotOwnedWallet()
+        {
+            var valueInCents = 1;
+            var addrA = "addr1";
+            var addrB = "addrF";
+
+            try
+            {
+                AddNewTransaction(valueInCents, addrA, addrB);
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("User tried to access another user wallet", e.InnerException.Message);
+                return; 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+        }
+
+        [TestMethod]
+        public void SendSocialMoneyFromWalletWithoutSufficientBalance()
+        {
+            var valueInCents = 1000000;
+            var addrA = "addrF";
+            var addrB = "addr1";
+
+            try
+            {
+                AddNewTransaction(valueInCents, addrA, addrB);
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Wallet don't have sufficient balance to withdraw 1000000", e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+        }
+
+        [TestMethod]
+        public void SendSocialMoneyToAnotherBankWallet()
+        {
+            var valueInCents = 1;
+            var addrA = "addrF";
+            var addrB = "addr5";
+
+            try
+            {
+                AddNewTransaction(valueInCents, addrA, addrB);
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Receiver wallet isn't of the same social bank currency", e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+        }
+
+        [TestMethod]
+        public void WalletIsReadOnly()
+        {
+
+            var query = from wallet in ParseObject.GetQuery("Wallet")
+                        where wallet.Get<string>("bitcoinAddress") == "addrF"
+                        select wallet;
+            var q = query.FindAsync();
+            q.Wait();
+
+
+            ParseObject obj = q.Result.First<ParseObject>();
+
+            obj["balance"] = obj.Get<int>("balance") + 1000;
+
+            var t = obj.SaveAsync();
+
+            try
+            {
+                t.Wait();
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual("This user is not allowed to perform the update operation on Wallet. You can change this setting in the Data Browser.", e.InnerException.Message);
+                return;
+            }
+            Assert.Fail("Exception Expected");
+        }
+
+        [TestMethod]
+        public void TransactionShouldUpdateBalances()
+        {
+            var valueInCents = 1;
+            var addrA = "addrF";
+            var addrB = "addr1";
+
+            var senderOriginalBalance = GetWalletBalance(addrA);
+            var receiverOriginalBalance = GetWalletBalance(addrB);
+
+            AddNewTransaction(valueInCents, addrA, addrB);
+
+            var senderBalance = GetWalletBalance(addrA);
+            var receiverBalance = GetWalletBalance(addrB);
+
+            Assert.AreEqual(senderBalance, senderOriginalBalance - valueInCents, "Sender balance");
+            Assert.AreEqual(receiverBalance, receiverOriginalBalance + valueInCents, "Receiver balance");
+        }
+
+        private void AddNewTransaction(int valueInCents, string addrA, string addrB)
+        {
+            var senderWallet = GetWalletByAddress(addrA);
+            var receiverWallet = GetWalletByAddress(addrB);
+
+            ParseObject tran = new ParseObject("Transaction");
+            tran["value"] = valueInCents;
+            tran["senderDescription"] = "Wallmart Test";
+            tran["senderWallet"] = senderWallet;
+            tran["receiverWallet"] = receiverWallet;
+            tran["user"] = CurrentUser;
+
+            var q = tran.SaveAsync();
+            q.Wait();
+        }
+
+        public ParseObject GetWalletByAddress(string address)
+        {
+
+            var query = from wallet in ParseObject.GetQuery("Wallet")
+                        where wallet.Get<string>("bitcoinAddress") == address
+                        select wallet;
+            var q = query.FindAsync();
+            q.Wait();
+
+
+            return q.Result.First<ParseObject>();
+        }
+
+        public int GetWalletBalance(string address)
+        {
+            var wallet = GetWalletByAddress(address);
+
+            return wallet.Get<int>("balance");
+        }
+
+        [TestMethod]
+        public void IssuanceOfZeroValueShouldFail()
+        {
+            var socialBankId = "wRYoCHo6Bq";
+            var valueInCents = 0;
+
+            var socialBankBefore = GetSoialBank(socialBankId);
+
+            try
+            {
+                AddNewIssuance(valueInCents, CurrentUser, socialBankBefore, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Invalid issuance value: 0", e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+
+        }
+
+        [TestMethod]
+        public void IssuanceOfNegativeValueShouldFail()
+        {
+            var socialBankId = "wRYoCHo6Bq";
+            var valueInCents = -1;
+
+            var socialBankBefore = GetSoialBank(socialBankId);
+
+            try
+            {
+                AddNewIssuance(valueInCents, CurrentUser, socialBankBefore, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Invalid issuance value: -1", e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+
+        }
+
+        [TestMethod]
+        public void IssuanceOfMoreThen10000000ShouldFail()
+        {
+            var socialBankId = "wRYoCHo6Bq";
+            var valueInCents = 10000000 + 1;
+
+            var socialBankBefore = GetSoialBank(socialBankId);
+
+            try
+            {
+                AddNewIssuance(valueInCents, CurrentUser, socialBankBefore, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+            }
+            catch (System.AggregateException e)
+            {
+                Assert.IsInstanceOfType(e.InnerException, typeof(ParseException));
+                Assert.AreEqual("Issuance value exceded the limit of 10000000: " + valueInCents.ToString(), e.InnerException.Message);
+                return;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            Assert.Fail("Exeption expected");
+
+        }
+
+        
+        [TestMethod]
+        public void IssuanceShouldUpdateSocialBankBalances()
+        {
+            var socialBankId = "wRYoCHo6Bq";
+            var valueInCents = 100000;
+
+            var socialBankBefore = GetSoialBank(socialBankId);
+
+            AddNewIssuance(valueInCents, CurrentUser, socialBankBefore, "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK");
+
+            var socialBankAfter = GetSoialBank(socialBankId);
+
+            Assert.AreEqual(socialBankAfter.Get<int>("totalIssuedSocialMoney"), valueInCents + socialBankBefore.Get<int>("totalIssuedSocialMoney"));
+            Assert.AreEqual(socialBankAfter.Get<int>("totalActiveSocialMoney"), valueInCents + socialBankBefore.Get<int>("totalActiveSocialMoney"));
+            Assert.AreEqual(socialBankAfter.Get<int>("onlineSocialMoneyBalance"), valueInCents + socialBankBefore.Get<int>("onlineSocialMoneyBalance"));
+        }
+
+        private void AddNewIssuance(int valueInCents, ParseObject bankOfficerUser, ParseObject socialBank, string issuanceBitcoinAddress)
+        {
+            ParseObject tran = new ParseObject("SocialMoneyIssuance");
+            tran["value"] = valueInCents;
+            tran["socialBank"] = socialBank;
+            tran["bankOfficerUser"] = bankOfficerUser;
+            tran["comment"] = "Issuance Unit Test";
+            tran["issuanceBitcoinAddress"] = issuanceBitcoinAddress;
+
+            var q = tran.SaveAsync();
+            q.Wait();
+        }
+
+        public ParseObject GetSoialBank(string socialBankId)
+        {
+            return GetObjectById("SocialBank", socialBankId);
+        }
+
+        public ParseObject GetObjectById(string className, string id)
+        {
+
+            var query = from instance in ParseObject.GetQuery(className)
+                        where instance.Get<string>("objectId") == id
+                        select instance;
+            var q = query.FindAsync();
+            q.Wait();
+
+
+            return q.Result.First<ParseObject>();
+        }
+
     }
 }
