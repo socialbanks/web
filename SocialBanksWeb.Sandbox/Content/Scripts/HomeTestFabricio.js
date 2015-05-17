@@ -74,20 +74,91 @@
     }
 
     this.SendBrazuca = function () {
-        //$.ajax({
-        //    url: "/home/send",
-        //    method: "POST",
-        //    data:
-        //        {
-        //            //source: "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
-        //            source: "1sEAUJsjuYJ9P64Y2MxchwyDfw8hbQDNA",
-        //            asset: "BRAZUCA",
-        //            quantity: 10,
-        //            destination: "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK"
-        //        },
-        //    success: self.Sucess_create_issuance
-        //});
+        this.InvokeParse('hello', {});
+
+        this.InvokeParse('send', {
+            "source": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
+            "destination": "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF",
+            "quantity": 100000000, //1 BRAZUCA (in brazuca's satoshi)
+            "asset": "BRAZUCA",
+        });
+
+        //this.InvokeCounterparty(
+        //        "create_send",
+        //         {
+        //             "source": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", 
+        //             "destination": "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF", 
+        //             "quantity":100000000, 
+        //             "asset": "BRAZUCA", 
+        //             "allow_unconfirmed_inputs":"True",
+        //             "fee":0, 
+        //             "encoding":"pubkeyhash"
+        //         }
+        //    );
+
     }
+
+    this.InvokeCounterparty = function (method, params) {
+        $.ajax({
+            method: 'POST',
+            url: 'http://counterparty:1234@xcp-dev.vennd.io:4000/api/',
+            body:
+              {
+                  "jsonrpc": "2.0",
+                  "id": 0,
+                  "method": method,
+                  "params": params
+              },
+
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Accept': 'application/json, text/javascript'
+            },
+            success: function (httpResponse) {
+                console.log("Success:");
+                console.log(httpResponse.data);
+            },
+            error: function (httpResponse) {
+                console.log("Error: " + httpResponse.text);
+            }
+        });
+    }
+
+    this.InvokeParse = function (method, params) {
+        $.ajax({
+            method: 'POST',
+            url: 'https://api.parse.com/1/functions/' + method,
+            body:
+              {
+                  "jsonrpc": "2.0",
+                  "id": 0,
+                  "method": method,
+                  "params": params
+              },
+
+            headers: {
+                'X-Parse-Application-Id': 'bCOd9IKjrpxCPGYQfyagabirn7pYFjYTvJqkq1x1',
+                'X-Parse-REST-API-Key': 'NZKI1LgMGKt8qm1N91XsKeg23oJqkFP7T2X5Ntdt',
+
+                'Content-Type': 'application/json;charset=utf-8',
+                'Accept': 'application/json, text/javascript'
+            },
+            success: function (httpResponse) {
+                console.log("#Success: " + httpResponse.result.toString());
+                console.log(httpResponse.result);
+                console.log(httpResponse);
+
+                return httpResponse.result;
+            },
+            error: function (httpResponse) {
+                console.log("#Error: " + httpResponse.text);
+                console.log(httpResponse);
+            }
+        });
+    }
+
+
+
 
     this.RunAll = function () {
         this.CreateKeys();
