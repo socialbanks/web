@@ -1,4 +1,7 @@
-﻿.quick-search {
+﻿body {
+    padding: 0 !important;
+}
+.quick-search {
     padding: 30px;
 }
 .quick-search-form {
@@ -42,5 +45,24 @@
 .find-more-sb {
     padding: 15px;
     text-align: center;
+
+}
+
+.float-right-dd {
+    float: right;
+    margin: 0 5px !important;
+}
+
+.custom-quote {
+    font-size: 24px !important;
+}
+.text {
+    margin: 30px 0;
+}
+
+.section-main-title {
+    margin-bottom: 50px;
+}
+.advantages-ul {
 
 }
