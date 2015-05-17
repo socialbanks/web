@@ -308,6 +308,8 @@
     <Content Include="Scripts\bitcore\util\buffer.js" />
     <Content Include="Scripts\bitcore\util\js.js" />
     <Content Include="Scripts\bitcore\util\preconditions.js" />
+    <Content Include="Scripts\counterwallet\counterwallet-deps-min.js" />
+    <Content Include="Scripts\counterwallet\counterwallet-min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
