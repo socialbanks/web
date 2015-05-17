@@ -22,6 +22,16 @@ namespace SocialBanks.Lib
         }
 
 
+        public async Task<IEnumerable<ParseObject>> get_socialbanks()
+        {
+            var query = from bank in ParseObject.GetQuery("SocialBank")
+                        where bank.Get<bool>("approved") == true
+                        select bank;
+            var q = await query.FindAsync();
+
+            return q;
+        }
+
         public async Task<string> hello()
         {
             return await ParseCloud.CallFunctionAsync<string>("hello", new Dictionary<string, object>());

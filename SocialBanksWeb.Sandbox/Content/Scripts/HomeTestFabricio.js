@@ -12,6 +12,7 @@
         //address = 1JeMty246HPfyGJEUJqswmP8xQUiCqUjMA
         var privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716cca0000000000');
         console.log(privateKey);
+        console.log(privateKey.toString());
 
         var publicKey = privateKey.toPublicKey();
         console.log(publicKey);
@@ -77,7 +78,6 @@
         console.log(transaction.serialize());
     }
 
-    
     //avulso => counterparty
     this.SendBrazuca1 = function () {
         var privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716cca0000000000');
@@ -94,7 +94,7 @@
                 "destination": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
                 "quantity": 1500000000,
                 "asset": "BRAZUCA",
-                "pubkey": senderPublicKey.toString()
+               // "pubkey": "1JeMty246HPfyGJEUJqswmP8xQUiCqUjMA"
                 
             },
             {
