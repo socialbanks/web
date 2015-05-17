@@ -34,10 +34,12 @@
 <div id="div-create-user" style="display: none">
     <h2>Create Administrator User for Social Bank</h2>
     <form id="form-create-user">
-        <label>e-mail/login:</label>
+        <label>e-mail/Username:</label>
         <input type="text" id="email" name="email" value="" />
         <label>First Name:</label>
         <input type="text" id="firstName" name="firstName" value="" />
+        <label>Last Name:</label>
+        <input type="text" id="lastName" name="lastName" value="" />
         <label>Password:</label>
         <input type="password" id="password" name="password" value="" />
         <label>Confirm Password:</label>
@@ -58,9 +60,23 @@
 </div>
 
 @section Scripts {
+    @Scripts.Render("~/Scripts/bitcore/bitcore.min.js");
+    @Scripts.Render("~/Scripts/bitcore-mnemonic/bitcore-mnemonic.min.js");
 
     @Scripts.Render("~/Content/Scripts/CreateSocialBank.js")
     <script>
+
+        
+        //var bitcore = require('bitcore');
+        var Mnemonic = require('bitcore-mnemonic');
+        var code = new Mnemonic('select scout crash enforce riot rival spring whale hollow radar rule sentence');
+        
+        var xpriv1 = code.toHDPrivateKey(); 
+        console.log(xpriv1);
+
+        var pub = xpriv1.privateKey.publicKey.toAddress();
+        console.log(pub.toString());//1NLLm4fxu4S6jy1sMgeWxnUnaz9kr8nKNC
+
         new CreateSocialBank($).Ready();
     </script>
 }
