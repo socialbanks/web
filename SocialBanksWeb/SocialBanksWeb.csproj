@@ -312,6 +312,8 @@
     <Content Include="Scripts\common-files\js\modernizr.custom.js" />
     <Content Include="Scripts\common-files\js\page-transitions.js" />
     <Content Include="Scripts\common-files\js\startup-kit.js" />
+    <Content Include="Scripts\counterwallet\counterwallet-deps-min.js" />
+    <Content Include="Scripts\counterwallet\counterwallet-min.js" />
     <Content Include="Scripts\flat-ui\js\application.js" />
     <Content Include="Scripts\flat-ui\js\bootstrap-select.js" />
     <Content Include="Scripts\flat-ui\js\bootstrap-switch.js" />

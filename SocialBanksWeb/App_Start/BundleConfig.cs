@@ -48,7 +48,7 @@ namespace SocialBanksWeb
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                        "~/Scripts/modernizr-*"));  
             
             bundles.Add(new ScriptBundle("~/bundles/modernizrcustom").Include(
                        "~/Scripts/common-files/js/modernizr.custom.js"));
@@ -93,6 +93,13 @@ namespace SocialBanksWeb
             // footer
             bundles.Add(new StyleBundle("~/Content/footercss").Include(
                         "~/Content/themes/ui-kit/ui-kit-footer/css/style.css"));
+
+            // ui-kit-content
+            bundles.Add(new StyleBundle("~/Content/uikitcontentcss").Include(
+                        "~/Content/themes/ui-kit/ui-kit-content/css/ui-kit-styles.css"));
+            // ui-kit-content
+            bundles.Add(new StyleBundle("~/Content/uikitcrewcss").Include(
+                        "~/Content/themes/ui-kit/ui-kit-crew/css/ui-kit-styles.css"));
         }
     }
 }
