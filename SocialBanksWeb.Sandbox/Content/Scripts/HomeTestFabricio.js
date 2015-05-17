@@ -3,8 +3,9 @@
 
     self.Passphrase = "";
 
-    //bitcore = require('bitcore');
-    //var explorer = require('bitcore-explorers');
+    var bitcore = require('bitcore');
+    var explorer = require('bitcore-explorers');
+    var insigth = explorer.insight;
 
     this.CreateKeys = function () {
         console.log('Test');
@@ -257,7 +258,7 @@
 
                     var signedTx = new bitcore.Transaction(signedHEX);
 
-                    //this.broadcast(signedTx);
+                    self.broadcast(signedTx);
                 },
                 error: function (error) {
                     console.log("#error");
