@@ -173,7 +173,7 @@ namespace SocialBanks.Lib.NetworkedTests
         public void SendSocialMoneyFromNotOwnedWallet()
         {
             var valueInCents = 1;
-            var addrA = "addr1";
+            var addrA = "addr2";
             var addrB = "addrF";
 
             try
@@ -198,7 +198,7 @@ namespace SocialBanks.Lib.NetworkedTests
         {
             var valueInCents = 1000000;
             var addrA = "addrF";
-            var addrB = "addr1";
+            var addrB = "addr2";
 
             try
             {
@@ -275,7 +275,7 @@ namespace SocialBanks.Lib.NetworkedTests
         {
             var valueInCents = 1;
             var addrA = "addrF";
-            var addrB = "addr1";
+            var addrB = "addr2";
 
             var senderOriginalBalance = GetWalletBalance(addrA);
             var receiverOriginalBalance = GetWalletBalance(addrB);
@@ -299,7 +299,7 @@ namespace SocialBanks.Lib.NetworkedTests
             tran["senderDescription"] = "Wallmart Test";
             tran["senderWallet"] = senderWallet;
             tran["receiverWallet"] = receiverWallet;
-            tran["user"] = CurrentUser;
+            //tran["user"] = CurrentUser;
 
             var q = tran.SaveAsync();
             q.Wait();
@@ -453,19 +453,29 @@ namespace SocialBanks.Lib.NetworkedTests
         }
 
 
-        //[TestMethod]
-        public void bitcore()
+        [TestMethod]
+        public void SendReturnsValidTransaciton()
         {
             var d = new Dictionary<string, object>();
-            //d["source"] = source;
+            d["source"] = "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK";
+            d["destination"] = "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF";
+            d["quantity"] = 100000000;
+            d["asset"] = "BRAZUCA";
 
-            var r = ParseCloud.CallFunctionAsync<string>("create_wallet", d);
+            var r = ParseCloud.CallFunctionAsync<Dictionary<string, object>>("send", d);
 
             r.Wait();
 
-            Assert.AreEqual("TESTE", r.Result);
+            Assert.AreEqual(3, r.Result.Count);
+            Assert.AreEqual("01000000021294edd0d496b92c2427e9dcbfdacf23c82da03720bd423ddce975f4b1b39981000000001976a914ce27246a0a6ca54dfa1f780ccd5cb3d0c73a75b288acffffffff77ecf2099ab2c69010c17090f7a3ef8924995bd24052e42326f6ffd5449e071c000000001976a914ce27246a0a6ca54dfa1f780ccd5cb3d0c73a75b288acffffffff0436150000000000001976a914748e483222863a836a421df1a9395bbd835bdfda88ac36150000000000001976a914e56ab5352463bc2d63caf227afc6a02d402c85d388ac36150000000000001976a914e76ab5352463bc2d6386f227afc6a5d8a132ff4e88ac84c07900000000001976a914ce27246a0a6ca54dfa1f780ccd5cb3d0c73a75b288ac00000000", 
+                r.Result["result"]);
         }
-        
+
+        /*
+curl http://xcp-dev.vennd.io:4000/api/ --user counterparty:1234 -H 'Content-Type: application/json; charset=UTF-8' -H 'Accept: application/json, text/javascript' --data-binary 
+         * '{"jsonrpc":"2.0","id":0,"method":"create_send","params": {"source": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK", "destination": "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF", "quantity":100000000, "asset": "BRAZUCA", "allow_unconfirmed_inputs":"True","fee":0, "encoding":"pubkeyhash"}}'
+         
+         */
 
     }
 }
