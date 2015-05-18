@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SocialBanksLib.NetworkedTests
 {
-    
+
     [TestClass]
     public class NBitcoinTest
     {
@@ -51,23 +51,27 @@ namespace SocialBanksLib.NetworkedTests
 
             for (int i = 0; i < trans.Inputs.Count; i++)
             {
-                trans.SignInput(privKey, privKey.ScriptPubKey, i);
+                //trans.SignInput(privKey, privKey.ScriptPubKey, i);
             }
 
-            var txBuilder = new TransactionBuilder();
 
-            txBuilder.AddKeys(privKey).SignTransaction(trans);
+
+            trans.Sign(privKey, false);
 
             {
                 var txRawHex = Encoders.Hex.EncodeData(trans.ToBytes());
                 Assert.AreNotEqual(rawTrans, txRawHex);
+                var a = (txRawHex);
+                Console.WriteLine(a);
             }
 
+            //var txBuilder = new TransactionBuilder();
+            //txBuilder.AddKeys(privKey);//.SignTransaction(trans);
             //Assert.IsTrue(txBuilder.Verify(trans));    
 
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void CreateAndSignTransaction()
         {
 
@@ -80,25 +84,36 @@ namespace SocialBanksLib.NetworkedTests
             d["destination"] = "1BdHqBSfUqv77XtBSeofH6XwHHczZxKRUF";
             d["quantity"] = 100000000;
             d["asset"] = "BRAZUCA";
-            d["pubkey"] = pubKeyHash;
+            //d["pubkey"] = pubKeyHash;
 
             var t = ParseCloud.CallFunctionAsync<Dictionary<string, object>>("send", d);
             t.Wait();
 
             var result = (Dictionary<string, object>)t.Result;
             Assert.AreEqual(3, result.Count);
-            var rawTrans = t.Result.ElementAt(2).Value.ToString();
+
+            if (result.Keys.Contains("error"))
+            {
+                var error = result["error"] as Dictionary<string, object>;
+                Assert.AreEqual(0, error.Keys.Count);
+            }
+
+            var rawTrans = t.Result["result"].ToString();
             Assert.IsTrue(rawTrans.Length > 300);
 
             var trans = new Transaction(rawTrans);
 
-            for (int i = 0; i < trans.Inputs.Count; i++)
-            {
-                trans.SignInput(privKey, privKey.ScriptPubKey, i);
-            }
+            //for (int i = 0; i < trans.Inputs.Count; i++)
+            //{
+            //    trans.SignInput(privKey, privKey.ScriptPubKey, i);
+            //}
+
+            trans.Sign(privKey, false);
 
             var txRawHex = Encoders.Hex.EncodeData(trans.ToBytes());
             Console.WriteLine(txRawHex);
+
+            Assert.AreNotEqual(rawTrans, txRawHex);
 
 
             //var txBuilder = new TransactionBuilder();
