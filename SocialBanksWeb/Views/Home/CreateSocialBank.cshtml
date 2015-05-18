@@ -3,31 +3,80 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create a New Social Bank</h2>
-<form id="form-create">
-    <label>Social Bank's name:</label>
-    <input type="text" id="name" name="name" value="" />
-    <label>Social Money:</label>
-    <input type="text" id="socialMoneyName" name="socialMoneyName" value="" />
+<div id="div-create-bank">
+    <h2>Create a New Social Bank</h2>
+    <form id="form-create-bank">
+        <label>Social Bank's name:</label>
+        <input type="text" id="name" name="name" value="" />
+        <label>Social Money:</label>
+        <input type="text" id="socialMoneyName" name="socialMoneyName" value="" />
 
-    It needs to be different from the social bank's name.
+        It needs to be different from the social bank's name.
 
-    <label>Social Bank's description:</label>
-    <textarea id="description" name="description"></textarea>
+        <label>Social Bank's description:</label>
+        <textarea id="description" name="description"></textarea>
 
-    <label>Social Bank's address:</label>
-    <textarea id="address" name="address"></textarea>
+        <label>Bitcoin address for donations:</label>
+        <input type="text" id="bitcoinAddressForDonation" name="bitcoinAddressForDonation" value="" />
 
-    <label>Zip Code:</label>
-    <input type="text" id="zipcode" name="zipcode" value="" />
+        <label>Social Bank's address:</label>
+        <textarea id="address" name="address"></textarea>
 
-</form>
+        <label>Zip Code:</label>
+        <input type="text" id="zipcode" name="zipcode" value="" />
 
-<button id="btn-create">CREATE NEW SOCIAL BANK</button>
+    </form>
+
+    <button id="btn-create-bank">NEXT</button>
+
+</div>
+
+<div id="div-create-user" style="display: none">
+    <h2>Create Administrator User for Social Bank</h2>
+    <form id="form-create-user">
+        <label>e-mail/Username:</label>
+        <input type="text" id="email" name="email" value="" />
+        <label>First Name:</label>
+        <input type="text" id="firstName" name="firstName" value="" />
+        <label>Last Name:</label>
+        <input type="text" id="lastName" name="lastName" value="" />
+        <label>Password:</label>
+        <input type="password" id="password" name="password" value="" />
+        <label>Confirm Password:</label>
+        <input type="password" id="password2" name="password2" value="" />
+
+    </form>
+
+    <button id="btn-create-user">NEXT</button>
+</div>
+
+<div id="div-create-passphrase" style="display: none">
+    <h2>Create Passphrase</h2>
+    <input type="text" id="passphrase" name="passphrase" readonly />
+    <br />
+    <button id="btn-create-passphrase">create</button>
+    <br />
+    <button id="btn-finish">FINISH</button>
+</div>
+
 @section Scripts {
+    @Scripts.Render("~/Scripts/bitcore/bitcore.min.js");
+    @Scripts.Render("~/Scripts/bitcore-mnemonic/bitcore-mnemonic.min.js");
 
     @Scripts.Render("~/Content/Scripts/CreateSocialBank.js")
     <script>
+
+        
+        //var bitcore = require('bitcore');
+        var Mnemonic = require('bitcore-mnemonic');
+        var code = new Mnemonic('select scout crash enforce riot rival spring whale hollow radar rule sentence');
+        
+        var xpriv1 = code.toHDPrivateKey(); 
+        console.log(xpriv1);
+
+        var pub = xpriv1.privateKey.publicKey.toAddress();
+        console.log(pub.toString());//1NLLm4fxu4S6jy1sMgeWxnUnaz9kr8nKNC
+
         new CreateSocialBank($).Ready();
     </script>
 }
