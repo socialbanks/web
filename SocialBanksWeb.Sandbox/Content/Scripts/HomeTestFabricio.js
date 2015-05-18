@@ -217,7 +217,9 @@
     this.SendBrazuca3 = function () {
 
         console.log('SendBrazuca3');
-        var w = new CWHierarchicalKey('buy bid grade held cool survive ceiling knock milk over yeah relax')
+        console.log('put a valid 12 word passphrase below');
+        return;
+        var w = new CWHierarchicalKey('--passphrase--')
 
         console.log(w);
 
@@ -254,9 +256,7 @@
 
                     console.log(signedHEX);
 
-                    var signedTx = new bitcore.Transaction(signedHEX);
-
-                    self.broadcast(signedTx);
+                    self.broadcast(signedHEX);
                 },
                 error: function (error) {
                     console.log("#error");
