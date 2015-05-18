@@ -64,5 +64,11 @@
     margin-bottom: 50px;
 }
 .advantages-ul {
-
+    list-style: none;
+}
+.advantages-ul li {
+    margin-bottom: 5px;
+}
+.advantages-check-icon {
+    color: #E74C3C;
 }
