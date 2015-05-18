@@ -232,7 +232,7 @@ namespace SocialBanksLib.NetworkedTests
             var privKeyServer = Key.Parse("KwPGv91ZJUB3UShXBWAZAzBXjYCkMgpoXbryW3dwW3B66pWivMRE", Network.Main);
             var strPubKey = privKeyServer.PubKey.ToHex(); //0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8
 
-            ////////////////////////////////////////
+            ////////////////////////////////////////ok
             //Client-side part (mobile wallet)
             ////////////////////////////////////////
 
@@ -278,6 +278,8 @@ namespace SocialBanksLib.NetworkedTests
                 {
                     Outputs = { new TxOut("0.00101000", client1P2SHAddress) }
                 };
+
+                //Coin array = new transaction input array
                 Coin[] client1CoinsP2SH = client1P2SH
                     .Outputs
                     //.Select((outp, i) => new ScriptCoin(new OutPoint(client1P2SH.GetHash(), i), outp, client1P2SHScript))
@@ -289,10 +291,14 @@ namespace SocialBanksLib.NetworkedTests
                 var tx = txBuilder
                         .AddCoins(client1CoinsP2SH)
                         .AddKeys(privKeyClient1)
+                        .AddKnownRedeems(client1P2SHScript)
                         .Send(addrFabricioWallet, "0.001")
                         .SetChange(client1P2SHAddress)
                         .BuildTransaction(true);
+                       
+                tx = txBuilder.AddKeys(privKeyClient1).SignTransaction(tx);
 
+                var rawTx1 = tx.ToHex();
                 tx.Sign(privKeyClient1, true);
 
                 Assert.IsTrue(!txBuilder.Verify(tx)); //Well, only one signature on the two required...
@@ -300,7 +306,11 @@ namespace SocialBanksLib.NetworkedTests
                 //emulate send tx to the api
                 rawTx = tx.ToHex();
             }
-
+            /*
+                        0000483045022100a17271d87dc1ab36ebf9aa449cd1daae33aa4ad44b55f4a661b1a01e90b6411002200384b19d8246f8cdb8f5d7ac04a1e25730023dc912d57b1c9a8c70eb587787c8014752210213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c82103d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de52ae
+                          00483045022100a17271d87dc1ab36ebf9aa449cd1daae33aa4ad44b55f4a661b1a01e90b6411002200384b19d8246f8cdb8f5d7ac04a1e25730023dc912d57b1c9a8c70eb587787c8014752210213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c82103d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de52ae
+  
+             */
             ////////////////////////////////////////
             //Server-side part (socialbanks api)
             ////////////////////////////////////////
