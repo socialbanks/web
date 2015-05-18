@@ -121,6 +121,107 @@ namespace SocialBanksLib.NetworkedTests
 
         }
 
+        [TestMethod]
+        public void CreateAndSignTransaction2()
+        {
+
+            //chave privada da 1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK (counterparty)
+            var privKey = Key.Parse("L2BkJmqFfEuDiaGxcTmA8vrrZnvoP523SMrZKzB8seHjKPwYX8Df");
+            var pubKeyHash = privKey.PubKey.Hash.ToString();
+
+            var d = new Dictionary<string, object>();
+            d["source"] = "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK";
+            d["quantity"] = 100000000;
+            d["asset"] = "BRAZUCA";
+            d["description"] = "BRAZUCA";
+            //d["pubkey"] = pubKeyHash;
+
+            var t = ParseCloud.CallFunctionAsync<Dictionary<string, object>>("create_issuance", d);
+            t.Wait();
+
+            var result = (Dictionary<string, object>)t.Result;
+            Assert.AreEqual(3, result.Count);
+
+            if (result.Keys.Contains("error"))
+            {
+                var error = result["error"] as Dictionary<string, object>;
+                Assert.AreEqual(0, error.Keys.Count);
+            }
+
+            var rawTrans = t.Result["result"].ToString();
+            Assert.IsTrue(rawTrans.Length > 300);
+
+            var trans = new Transaction(rawTrans);
+
+            //for (int i = 0; i < trans.Inputs.Count; i++)
+            //{
+            //    trans.SignInput(privKey, privKey.ScriptPubKey, i);
+            //}
+
+            trans.Sign(privKey, false);
+
+            var txRawHex = Encoders.Hex.EncodeData(trans.ToBytes());
+            Console.WriteLine(txRawHex);
+
+            Assert.AreNotEqual(rawTrans, txRawHex);
+
+
+            //var txBuilder = new TransactionBuilder();
+            //Assert.IsTrue(txBuilder.Verify(trans));    
+
+        }
+
+        [TestMethod]
+        public void CreateAndSignTransaction3()
+        {
+
+            //chave privada da 1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK (counterparty)
+            var privKey = Key.Parse("L2BkJmqFfEuDiaGxcTmA8vrrZnvoP523SMrZKzB8seHjKPwYX8Df");
+            var pubKeyHash = privKey.PubKey.Hash.ToString();
+
+            var d = new Dictionary<string, object>();
+            d["source"] = "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK";
+            d["quantity"] = (long)10000 * (long)100000000;
+            d["asset"] = "MOQUECA";
+            d["description"] = "MOQUECA";
+            //d["pubkey"] = pubKeyHash;
+
+            var t = ParseCloud.CallFunctionAsync<Dictionary<string, object>>("create_issuance", d);
+            t.Wait();
+
+            var result = (Dictionary<string, object>)t.Result;
+
+            if (result.Keys.Contains("error"))
+            {
+                var error = result["error"] as Dictionary<string, object>;
+                Assert.AreEqual(0, error.Keys.Count);
+            }
+
+            Assert.AreEqual(3, result.Count);
+
+            var rawTrans = t.Result["result"].ToString();
+            Assert.IsTrue(rawTrans.Length > 300);
+
+            var trans = new Transaction(rawTrans);
+
+            //for (int i = 0; i < trans.Inputs.Count; i++)
+            //{
+            //    trans.SignInput(privKey, privKey.ScriptPubKey, i);
+            //}
+
+            trans.Sign(privKey, false);
+
+            var txRawHex = Encoders.Hex.EncodeData(trans.ToBytes());
+            Console.WriteLine(txRawHex);
+
+            Assert.AreNotEqual(rawTrans, txRawHex);
+
+            var a = 1;
+            //var txBuilder = new TransactionBuilder();
+            //Assert.IsTrue(txBuilder.Verify(trans));    
+
+        }
+
 
         public byte[] GetBytes(string str)
         {
