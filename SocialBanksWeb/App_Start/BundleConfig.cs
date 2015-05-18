@@ -94,9 +94,12 @@ namespace SocialBanksWeb
             bundles.Add(new StyleBundle("~/Content/footercss").Include(
                         "~/Content/themes/ui-kit/ui-kit-footer/css/style.css"));
 
-            // ui-kit
-            bundles.Add(new StyleBundle("~/Content/uikitstylescss").Include(
+            // ui-kit-content
+            bundles.Add(new StyleBundle("~/Content/uikitcontentcss").Include(
                         "~/Content/themes/ui-kit/ui-kit-content/css/ui-kit-styles.css"));
+            // ui-kit-content
+            bundles.Add(new StyleBundle("~/Content/uikitcrewcss").Include(
+                        "~/Content/themes/ui-kit/ui-kit-crew/css/ui-kit-styles.css"));
         }
     }
 }
