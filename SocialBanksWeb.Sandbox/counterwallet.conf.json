@@ -1,0 +1,15 @@
+{
+  "servers": [ ],
+  "googleAnalyticsUA": "UA-47404711-2",
+  "googleAnalyticsUA-testnet": "UA-47404711-4",
+  "rollbarAccessToken": "30d23b5d51244169a98fc922f0d1b940",
+  "restrictedAreas": {
+    "pages/betting.html": ["US"],
+    "pages/openbets.html": ["US"],
+    "pages/matchedbets.html": ["US"],
+    "pages/rps.html": ["US"],
+    "dividend": ["US"]
+  },
+  "AVAILABLE_LANGUAGES": ["en", "zh_cn", "zh_tw", "ru", "cs", "da"],
+  "DEFAULT_LANGUAGE": "en"
+}

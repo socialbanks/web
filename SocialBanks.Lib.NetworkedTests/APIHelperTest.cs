@@ -271,6 +271,17 @@ namespace SocialBanks.Lib.NetworkedTests
         }
 
         [TestMethod]
+        public void GetActiveSocialBanks()
+        {
+            var q = ObjectUnderTest.get_socialbanks();
+            q.Wait();
+            var result = q.Result;
+
+            Assert.AreEqual(19, result.Count());
+
+        }
+
+        [TestMethod]
         public void TransactionShouldUpdateBalances()
         {
             var valueInCents = 1;
