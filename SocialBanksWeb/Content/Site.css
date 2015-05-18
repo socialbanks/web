@@ -8,6 +8,12 @@
     margin: auto;
     max-width: 50%;
 }
+.social-banks-projects {
+    
+}
+.social-banks-section {
+    border-top: 2px solid #ecf0f1;
+}
 .social-banks-list {
     padding: 15px;
 }
@@ -72,4 +78,8 @@
 }
 .advantages-check-icon {
     color: #E74C3C;
+}
+
+.who-whe-are-section {
+    border-top: 2px solid #ecf0f1;
 }
