@@ -72,6 +72,9 @@
 }
 .advantages-ul {
     list-style: none;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
 }
 .advantages-ul li {
     margin-bottom: 5px;
@@ -83,3 +86,12 @@
 .who-whe-are-section {
     border-top: 2px solid #ecf0f1;
 }
+.custom-background-image {
+  background-image: url("/Content/themes/common-files/img/favela1.jpg") !important;
+  opacity: 0.5 !important;
+  filter: alpha(opacity=7500);
+  opacity: 0.5;
+  filter: alpha(opacity=75);
+  background-position: 50% !important;
+}
+

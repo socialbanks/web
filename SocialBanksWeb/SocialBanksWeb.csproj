@@ -401,6 +401,7 @@
     <Content Include="Content\themes\common-files\img\crew\sergey-s.png" />
     <Content Include="Content\themes\common-files\img\crew\tatiana-y.png" />
     <Content Include="Content\themes\common-files\img\crew\vladimir-k.png" />
+    <Content Include="Content\themes\common-files\img\favela1.jpg" />
     <Content Include="Content\themes\common-files\img\footer\logo-small%402x.png" />
     <Content Include="Content\themes\common-files\img\Hawaii_001.jpg" />
     <Content Include="Content\themes\common-files\img\header\browser%402x.png" />
@@ -739,6 +740,7 @@
     <Content Include="Scripts\common-files\js\jquery.bxslider.min.js" />
     <Content Include="Scripts\common-files\js\jquery.parallax.min.js" />
     <Content Include="Scripts\common-files\js\jquery.scrollTo-1.4.3.1-min.js" />
+    <Content Include="Scripts\common-files\js\jquery.sharrre.js" />
     <Content Include="Scripts\common-files\js\jquery.sharrre.min.js" />
     <Content Include="Scripts\common-files\js\jquery.svg.js" />
     <Content Include="Scripts\common-files\js\jquery.svganim.js" />
@@ -746,6 +748,7 @@
     <Content Include="Scripts\common-files\js\modernizr.custom.js" />
     <Content Include="Scripts\common-files\js\page-transitions.js" />
     <Content Include="Scripts\common-files\js\startup-kit.js" />
+    <Content Include="Scripts\custom\indexpagenav.js" />
     <Content Include="Scripts\flat-ui\js\application.js" />
     <Content Include="Scripts\flat-ui\js\bootstrap-select.js" />
     <Content Include="Scripts\flat-ui\js\bootstrap-switch.js" />

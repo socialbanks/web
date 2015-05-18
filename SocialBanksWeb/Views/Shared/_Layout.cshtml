@@ -17,7 +17,6 @@
         @Styles.Render("~/Content/themes/ui-kit/ui-kit-crew/css/ui-kit-styles.css")
         @Styles.Render("~/Content/themes/ui-kit/ui-kit-projects/css/ui-kit-styles.css")
         @Styles.Render("~/Content/css")
-
     </head>
     <body>
         <div class="page-wrapper">
@@ -51,16 +50,16 @@
                             <div class="collapse navbar-collapse">
                                 <ul class="nav pull-right">
                                     <li>
-                                        <a href="#">SOCIAL BANKS</a>
+                                        <a href="#sb-section" class="social-banks-list-link">SOCIAL BANKS</a>
                                     </li>
                                     <li>
-                                        <a href="#">DIGITAL CURRENCY</a>
+                                        <a href="#dc-section" class="digital-currencies-link">DIGITAL CURRENCY</a>
                                     </li>
                                     <li>
-                                        <a href="#">OUR SOLUTION</a>
+                                        <a href="#os-section" class="our-solution-link">OUR SOLUTION</a>
                                     </li>
                                     <li>
-                                        <a href="#">WHO WHE ARE</a>
+                                        <a href="#who-section" class="who-whe-are-link">WHO WE ARE</a>
                                     </li>
                                 </ul>
                                 <ul class="subnav">
@@ -92,7 +91,7 @@
             <section class="header-1-sub">
                 <div id="pt-main" class="page-transitions pt-perspective  pt-item-1 pt-first">
                     <div class="pt-page pt-page-1 pt-page-current">
-                        <div class="background">&nbsp;</div>
+                        <div class="background custom-background-image">&nbsp;</div>
                         <div class="caption">
                             <div class="container">
                                 <h3>
@@ -170,11 +169,7 @@
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrapjs")
         @Scripts.Render("~/bundles/modernizrcustom")
-        @Scripts.Render("~/bundles/pagetransitions")
-        @Scripts.Render("~/bundles/easing")
-        @Scripts.Render("~/bundles/jquerysvg")
-        @Scripts.Render("~/bundles/jquerysvganim")
-        @Scripts.Render("~/bundles/startupkitjs")
+        
         
         @RenderSection("scripts", required: false)
     </body>

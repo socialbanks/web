@@ -165,6 +165,7 @@
                 </div>
             </div>
         </div>
+        <!-- 
         <div class="row find-more-sb-row">
             <div class="col-xs-12">
                 <div class="find-more-sb">
@@ -172,11 +173,12 @@
                 </div>
             </div>
         </div>
+        -->
     </div>
     <!--/.container-->
 </section>
 
-<section class="blog-3 social-banks-section">
+<section class="blog-3 social-banks-section" id="sb-section">
     <div class="container">
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
@@ -224,7 +226,7 @@
     </div>
 </section>
 
-<section class="blog-2 digital-currencies">
+<section id="dc-section" class="blog-2 digital-currencies">
     <div class="background hidden-xs">
         <div class="container">
             <div class="row">
@@ -246,8 +248,8 @@
                 </div>
                 <div class="text">
                     <p>
-                        Digital currencies are a mechanism of Exchange via internet which exhibit properties similar to physical currencies, but that, as differential, enables a safe and efficient alternative to value transfers quickly and with low cost. As traditional currency can be used to purchase goods and services, but also can have their use restricted to certain communities or areas, whether they be real or virtual. In this way, represent innovation both in form of payment and as a form of currency.
-                        Fundamentally, what exists behind a digital currency is a technology that is capable of maintaining, in a decentralized manner, a "digital accounting book" that determines where the coins are, how many there are and to whom they belong. Thus, if you have 10 digital currencies, knows the address and password, you can authorize a new "record" in the "digital accounting book" and move the coins to someone else.
+                        Digital currencies are a mechanism of Exchange via internet which exhibit properties similar to physical currencies, but that, as differential, enables a safe and efficient alternative to value transfers quickly and with low cost. As traditional currency can be used to purchase goods and services, but also can have their use restricted to certain communities or areas, wether they be real or virtual. In this way, represent innovation both in form of payment and as a form of currency.
+                        Fundamentally, what exists behind a digital currency is a technology that is capable of maintaining, in a decentralized manner, a "digital accounting book" that determines were the coins are, how many there are and to whom they belong. Thus, if you have 10 digital currencies, knows the address and password, you can authorize a new "record" in the "digital accounting book" and move the coins to someone else.
                         The first innovation of this "digital accounting book" is your safety, because it is not on a computer but in copies scattered around the world. This way is impossible to circumvent the records because it would be necessary to change all at once. The second is the fact that simply having a password I can allow a new "record", transferring an amount to another person, without interference from banks or any other intermediary. Just like a real currency.
                     </p>
                     <p>
@@ -259,7 +261,7 @@
     </div>
 </section>
 
-<section class="content-5 our-solution">
+<section id="os-section" class="content-5 our-solution">
     <div class="container">
         <img src="/Content/themes/common-files/icons/magic-wand@2x.png" width="200" height="200" alt="">
         <div class="row">
@@ -284,12 +286,7 @@
             <div class="col-sm-4 col-sm-offset-2">
                 <span class="fui-upload"> </span>
                 <h6>Advantages</h6>
-                <ul class ="advantages-ul" style="
-    list-style: none;
-    font-size: 16px;
-    margin: 0;
-    padding: 0;
-">
+                <ul class ="advantages-ul">
 
                     <li class="row">
                         <span class="col-sm-1 fui-star fui-rotate-0 advantages-check-icon" ></span>
@@ -309,8 +306,9 @@
                     </li>
                     <li class="row">
                         <span class="col-sm-1 fui-star advantages-check-icon"></span>
-                        <span class="col-sm-11" style="
-">facilitates the adhesion (decentralized online "purchase") as well as the use (iOS and Android mobile wallets) of currency by users</span>
+                        <span class="col-sm-11">
+                            facilitates the adhesion (decentralized online "purchase") as well as the use (iOS and Android mobile wallets) of currency by users
+                        </span>
                     </li>
                 </ul>
 
@@ -324,10 +322,10 @@
     </div>
 </section>
 
-<section class="blog-5 who-whe-are-section">
+<section id="who-section" class="blog-5 who-we-are-section">
     <div class="title">
         <div class="container">
-            <h3>Who Whe Are</h3>
+            <h3>Who We Are</h3>
         </div>
     </div>
     <div class="quote">
@@ -520,9 +518,17 @@
 </section>
 
 @section Scripts {
-    @Scripts.Render("~/Scripts/bitcore/bitcore.min.js");
+    @Scripts.Render("~/Scripts/bitcore/bitcore.min.js")
     @Scripts.Render("~/Content/Scripts/HomeIndex.js")
+    @Scripts.Render("~/bundles/jqueryscroll")
+    @Scripts.Render("~/bundles/sharrrejs")
+    @Scripts.Render("~/bundles/startupkitjs")
+    @Scripts.Render("~/bundles/pagetransitions")
+    @Scripts.Render("~/bundles/easing")
+    @Scripts.Render("~/bundles/jquerysvg")
+    @Scripts.Render("~/bundles/jquerysvganim")
+    @Scripts.Render("~/Scripts/custom/indexpagenav.js")
     <script>
-        new HomeIndex($).Ready();
+        // new HomeIndex($).Ready();
     </script>
 }

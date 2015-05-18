@@ -32,6 +32,9 @@ namespace SocialBanksWeb
             bundles.Add(new ScriptBundle("~/bundles/jqueryparallax").Include(
                        "~/Scripts/common-files/js/jquery.parallax.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/sharrrejs").Include(
+                       "~/Scripts/common-files/js/jquery.sharrre.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/startupkitjs").Include(
                        "~/Scripts/common-files/js/startup-kit.js"));
 
@@ -44,6 +47,9 @@ namespace SocialBanksWeb
            
             bundles.Add(new ScriptBundle("~/bundles/jqueryuicustom").Include(
                         "~/Scripts/flat-ui/js/jquery-ui-{version}.custom.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/indexpagenavjs").Include(
+                        "~/Scripts/custom/indexpagenav.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
