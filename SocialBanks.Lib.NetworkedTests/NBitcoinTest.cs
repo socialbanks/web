@@ -1,11 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NBitcoin;
 using NBitcoin.DataEncoders;
+using NBitcoin.Protocol;
+using NBitcoin.RPC;
 using Parse;
 using SocialBanks.Lib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,7 +39,6 @@ namespace SocialBanksLib.NetworkedTests
             task.Wait();
             CurrentUser = task.Result;
         }
-
 
         [TestMethod]
         public void SignTransaction()
@@ -222,6 +225,120 @@ namespace SocialBanksLib.NetworkedTests
 
         }
 
+        [TestMethod]
+        public void CreateMultiSig()
+        {
+            //Only SocialBanks know this privKey
+            var privKeyServer = Key.Parse("KwPGv91ZJUB3UShXBWAZAzBXjYCkMgpoXbryW3dwW3B66pWivMRE", Network.Main);
+            var strPubKey = privKeyServer.PubKey.ToHex(); //0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8
+
+            ////////////////////////////////////////
+            //Client-side part (mobile wallet)
+            ////////////////////////////////////////
+
+            var pubKeyServer = new PubKey("0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8");
+            var addressServer = pubKeyServer.GetAddress(Network.Main); // => 14pkzzJbAg1N3EFkEnc4o5uHQJAzCqUUFJ
+
+            var privKeyClient1 = Key.Parse("KxyACdWtFEY6p2nAbSAZv9NXgmJNm4i6HDUjgoy1YtVFTskV75KX");
+            var pubKeyClient1 = privKeyClient1.PubKey;
+            var AddressClient1 = privKeyClient1.PubKey.GetAddress(Network.Main); // => AWXoDzdqqSbf3Fo7yKozXX2aP9nvmsVse
+
+            var addrFabricioWallet = new BitcoinAddress("1FTuKcjGUrMWatFyt8i1RbmRzkY2V9TDMG");
+
+            string rawTx;
+
+            {
+                //{2 0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8 03d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de 2 OP_CHECKMULTISIG}
+                Script client1P2SHScript = 
+                    PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { pubKeyServer, pubKeyClient1 });
+                var client1P2SHAddress = client1P2SHScript.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	
+
+
+
+                /*
+                    https://blockchain.info/pt/unspent?active=3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi
+                    "unspent_outputs":[
+	
+                        {
+                            "tx_hash":"dd4117eab5a18cc1c1d3580822faf632f4bcec1fc079b935ef4ea1958b37cfb6",
+                        ==> "tx_hash_big_endian":"b6cf378b95a14eef35b979c01fecbcf432f6fa220858d3c1c18ca1b5ea1741dd",
+                            "tx_index":87264463,
+                            "tx_output_n": 0,
+                            "script":"a914ff26223bbaa71dbaec1693059c1feb5d1e14b8f487",
+                            "value": 1000000,
+                            "value_hex": "0f4240",
+                            "confirmations":35
+                        }	  
+                    ]
+                */
+                //We should be able to offer the "b6cf378b95a14eef35b979c01fecbcf432f6fa220858d3c1c18ca1b5ea1741dd" unspend transaction.
+                var txHash = new uint256("b6cf378b95a14eef35b979c01fecbcf432f6fa220858d3c1c18ca1b5ea1741dd");
+
+                Transaction client1P2SH = new Transaction()
+                {
+                    Outputs = { new TxOut("0.00101000", client1P2SHAddress) }
+                };
+                Coin[] client1CoinsP2SH = client1P2SH
+                    .Outputs
+                    //.Select((outp, i) => new ScriptCoin(new OutPoint(client1P2SH.GetHash(), i), outp, client1P2SHScript))
+                    .Select((outp, i) => new ScriptCoin(new OutPoint(txHash, i), outp, client1P2SHScript))
+                    .ToArray();
+
+                var txBuilder = new TransactionBuilder();
+
+                var tx = txBuilder
+                        .AddCoins(client1CoinsP2SH)
+                        .AddKeys(privKeyClient1)
+                        .Send(addrFabricioWallet, "0.001")
+                        .SetChange(client1P2SHAddress)
+                        .BuildTransaction(true);
+
+                tx.Sign(privKeyClient1, true);
+
+                Assert.IsTrue(!txBuilder.Verify(tx)); //Well, only one signature on the two required...
+
+                //emulate send tx to the api
+                rawTx = tx.ToHex();
+            }
+
+            ////////////////////////////////////////
+            //Server-side part (socialbanks api)
+            ////////////////////////////////////////
+            {
+
+                var txClient = new Transaction(rawTx);
+
+                var txBuilder = new TransactionBuilder();
+                var tx = txBuilder
+                        .AddKeys(privKeyServer)
+                        .SignTransaction(txClient);
+
+                tx.Sign(privKeyServer, true);
+
+                Assert.AreNotEqual(rawTx, tx.ToHex());
+                //Assert.IsTrue(txBuilder.Verify(tx));
+            
+            }
+
+            //Input should be tx "b6cf378b95a14eef35b979c01fecbcf432f6fa220858d3c1c18ca1b5ea1741dd"
+            //But is             "71b1f9104951d81a8016e78e5804dea7acc419af93712b0bfa059b0439192eb6"
+
+            //Signed Transaction:
+            //0100000001dd4117eab5a18cc1c1d3580822faf632f4bcec1fc079b935ef4ea1958b37cfb600000000910047304402207e7d55441fc23843863a50925235c1a3e7a8a311a379e052e04ec8c37f58eaab02204dda0f748e0b44b9b5e9c11ca74f63911e7e417a696c9d570b979808029841d5014752210213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c82103d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de52aeffffffff02e80300000000000017a914ff26223bbaa71dbaec1693059c1feb5d1e14b8f487a0860100000000001976a9149ea84056a5a9e294d93f11300be51d51868da69388ac00000000
+
+        }
+
+
+        [TestMethod]
+        public void GetUnspendTransactions()
+        {
+            var outputs = this.ObjectUnderTest.FindUnspendTransactions("3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi");
+            Assert.AreEqual(1, outputs.Count);
+
+            //var json = HttpGet("https://blockchain.info/pt/unspent?active=3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi");
+            //Assert.AreEqual("", json);
+        }
+
 
         public byte[] GetBytes(string str)
         {
@@ -231,4 +348,7 @@ namespace SocialBanksLib.NetworkedTests
         }
 
     }
+
+  
+
 }

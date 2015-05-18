@@ -1,7 +1,12 @@
 ﻿using Parse;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -26,9 +31,8 @@ namespace SocialBanks.Lib
         {
             var query = from bank in ParseObject.GetQuery("SocialBank")
                         where bank.Get<bool>("approved") == true
-                        orderby bank.Get<int>("totalActiveSocialMoney") descending, bank.Get<int>("onlineSocialMoneyBalance")
                         select bank;
-            var q = await query.Limit(8).FindAsync();
+            var q = await query.FindAsync();
 
             return q;
         }
@@ -37,6 +41,7 @@ namespace SocialBanks.Lib
         {
             return await ParseCloud.CallFunctionAsync<string>("hello", new Dictionary<string, object>());
         }
+
 
         public async Task<DtoApiResponse<List<DtoAsset>>> get_balances(params string[] adresses)
         {
@@ -197,5 +202,70 @@ namespace SocialBanks.Lib
             return result;
         }
 
+        public string HttpGet(string URI)
+        {
+            System.Net.WebRequest req = System.Net.WebRequest.Create(URI);
+            //req.Proxy = new System.Net.WebProxy(ProxyString, true); //true means no proxy
+            System.Net.WebResponse resp = req.GetResponse();
+            System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
+            return sr.ReadToEnd().Trim();
+        }
+
+
+        //curl https://testnet.helloblock.io/v1/addresses/unspents?addresses=mvaRDyLUeF4CP7Lu9umbU3FxehyC5nUz3L&addresses=mpjuaPusdVC5cKvVYCFX94bJX1SNUY8EJo&limit=2
+ 
+        public List<UnspentOutput> FindUnspendTransactions(string address)
+        {
+            var strJSON = HttpGet("https://blockchain.info/pt/unspent?active=" + address);
+            
+            
+            var unspendList = DeserializeUnspentOutputList(strJSON);
+            
+            return unspendList.outputs;
+
+        }
+
+        public static UnspentOutputList DeserializeUnspentOutputList(string json)
+        {
+            var result = new UnspentOutputList();
+            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(UnspentOutputList));
+            MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(json));
+            js.WriteObject(ms, result);
+
+            return result;
+        }
+    }
+
+    [DataContract]
+    public class UnspentOutput
+    {
+        [DataMember]
+        public string tx_hash { get; set; }
+        [DataMember]
+        public string tx_hash_big_endian { get; set; }
+        [DataMember]
+        public int tx_index { get; set; }
+        [DataMember]
+        public int tx_output_n { get; set; }
+        [DataMember]
+        public string script { get; set; }
+        [DataMember]
+        public int value { get; set; }
+        [DataMember]
+        public string value_hex { get; set; }
+        [DataMember]
+        public int confirmations { get; set; }
+    }
+
+    [DataContract]
+    public class UnspentOutputList
+    {
+        public UnspentOutputList()
+        {
+            outputs = new List<UnspentOutput>();
+        }
+
+        [DataMember]
+        public List<UnspentOutput> outputs { get; set; }
     }
 }
