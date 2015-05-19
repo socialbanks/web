@@ -337,6 +337,8 @@
     <Content Include="Content\themes\common-files\icons\Watches%402x.png" />
     <Content Include="Content\themes\common-files\icons\Wine%402x.png" />
     <Content Include="Content\themes\common-files\icons\Yin-and-Yang%402x.png" />
+    <Content Include="Content\themes\common-files\img\bitcoin.jpg" />
+    <Content Include="Content\themes\common-files\img\bitcoin2.jpg" />
     <Content Include="Content\themes\common-files\img\Brazil_002.jpg" />
     <Content Include="Content\themes\common-files\img\Comp.jpg" />
     <Content Include="Content\themes\common-files\img\content-large\sample-04.jpg" />
@@ -416,10 +418,17 @@
     <Content Include="Content\themes\common-files\img\crew\adrian-v-1.png" />
     <Content Include="Content\themes\common-files\img\crew\adrian-v.png" />
     <Content Include="Content\themes\common-files\img\crew\edvard-k.png" />
+    <Content Include="Content\themes\common-files\img\crew\fabricio.jpg" />
+    <Content Include="Content\themes\common-files\img\crew\felipemendes.png" />
+    <Content Include="Content\themes\common-files\img\crew\josias.jpg" />
+    <Content Include="Content\themes\common-files\img\crew\marcelo.jpg" />
+    <Content Include="Content\themes\common-files\img\crew\marcos.jpg" />
+    <Content Include="Content\themes\common-files\img\crew\mauricio.jpg" />
     <Content Include="Content\themes\common-files\img\crew\oxana-n.png" />
     <Content Include="Content\themes\common-files\img\crew\sergey-s.png" />
     <Content Include="Content\themes\common-files\img\crew\tatiana-y.png" />
     <Content Include="Content\themes\common-files\img\crew\vladimir-k.png" />
+    <Content Include="Content\themes\common-files\img\favela.jpg" />
     <Content Include="Content\themes\common-files\img\favela1.jpg" />
     <Content Include="Content\themes\common-files\img\footer\logo-small%402x.png" />
     <Content Include="Content\themes\common-files\img\Hawaii_001.jpg" />
@@ -446,6 +455,7 @@
     <Content Include="Content\themes\common-files\img\projects\img-2.png" />
     <Content Include="Content\themes\common-files\img\projects\img-3.png" />
     <Content Include="Content\themes\common-files\img\projects\img-4.png" />
+    <Content Include="Content\themes\common-files\img\socialbanks.png" />
     <Content Include="Content\themes\flat-ui\bootstrap\css\bootstrap-docs.css" />
     <Content Include="Content\themes\flat-ui\bootstrap\css\bootstrap.css" />
     <Content Include="Content\themes\flat-ui\bootstrap\css\prettify.css" />

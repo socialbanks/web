@@ -27,7 +27,7 @@
                         <div class="navbar col-sm-12 navbar-fixed-top" role="navigation">
                             <div class="navbar-header">
                                 <button type="button" class="navbar-toggle"></button>
-                                <a class="brand" href="#">Social Banks</a>
+                                <a class="brand" href="#"><img src="~/Content/themes/common-files/img/socialbanks.png" alt="Social Banks" /> SocialBanks</a>
                             </div>
                             <div class="navbar-collapse collapse">
                                 <ul class="nav pull-right">
@@ -86,18 +86,6 @@
                     </div>
                 </div>
             </section>
-            <div class="container-fluid">
-                <div class="row">
-                    <nav class="navbar col-sm-12" role="navigation">
-                        <div class="collapse navbar-collapse pull-right">
-                            <form class="navbar-form">
-                                @Html.ActionLink("REGISTER NEW SOCIAL BANK", "Create", new { controller = "SocialBank" }, new { @class = "btn btn-success custom-border-radius" })
-                                @Html.ActionLink("SIGN IN", "Login", new { controller = "Account" }, new { @class = "btn btn-primary custom-border-radius" })
-                            </form>
-                        </div>
-                    </nav>
-                </div>
-            </div>
             <div class="delimiter"></div>
             
             @RenderBody()
