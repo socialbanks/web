@@ -16,7 +16,7 @@ namespace SocialBanksWeb.Models
             zipcode = obj.Get<string>("zipcode");
             socialMoneyName = obj.Get<string>("socialMoneyName");
             onlineSocialMoneyBalance = obj.Get<int>("onlineSocialMoneyBalance");
-            bitcoinAddressForSocialMoneyIssuance = obj.Get<string>("bitcoinAddressForDonation");
+            bitcoinAddressForDonation = obj.Get<string>("bitcoinAddressForDonation");
         }
         public string name {get; private set;}
         public string description { get; private set; }
@@ -25,6 +25,6 @@ namespace SocialBanksWeb.Models
         public string zipcode { get; private set; }
         public string socialMoneyName { get; private set; }
         public int onlineSocialMoneyBalance { get; private set; }
-        public string bitcoinAddressForSocialMoneyIssuance { get; private set; }
+        public string bitcoinAddressForDonation { get; private set; }
     }
 }
