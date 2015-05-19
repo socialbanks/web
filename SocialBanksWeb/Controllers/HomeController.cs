@@ -8,17 +8,19 @@ using Parse;
 using SocialBanks.Lib;
 using System.Web.Hosting;
 using System.Threading.Tasks;
+using NBitcoin;
 
 namespace SocialBanksWeb.Controllers
 {
     public class HomeController : Controller
     {
         APIHelper APIHelper;
+        string KeysFilePath;
         public HomeController()
         {
-            var keysFilePath = HostingEnvironment.MapPath("~/keys.txt");
+            KeysFilePath = HostingEnvironment.MapPath("~/keys.txt");
             APIHelper = new APIHelper();
-            APIHelper.Initialize(keysFilePath);
+            APIHelper.Initialize(KeysFilePath);
         }
 
         public async Task<ActionResult> Index()
@@ -27,7 +29,8 @@ namespace SocialBanksWeb.Controllers
 
             List<SocialBankModel> sbs = new List<SocialBankModel>();
 
-            foreach (ParseObject obj in banks) {
+            foreach (ParseObject obj in banks)
+            {
                 var sb = new SocialBankModel(obj);
                 sbs.Add(sb);
             }
@@ -74,6 +77,26 @@ namespace SocialBanksWeb.Controllers
 
             return Json("success");
         }
+
+        [HttpPost]
+        public string sign_transaction_server(string tx)
+        {
+            var keys = System.IO.File.ReadAllLines(KeysFilePath);
+            
+            var privKeyServer = Key.Parse(keys[2], Network.Main);
+            var txClient = new Transaction(tx);
+
+            var txBuilder = new TransactionBuilder();
+            var transactionToSign = txBuilder
+                    .AddKeys(privKeyServer)
+                    .SignTransaction(txClient);
+
+            transactionToSign.Sign(privKeyServer, true);
+
+            return transactionToSign.ToHex();
+        }
+
+
 
 
     }

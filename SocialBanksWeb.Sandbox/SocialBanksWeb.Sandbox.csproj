@@ -43,6 +43,15 @@
       <HintPath>..\packages\BlockchainAPI.1.0.3.0\lib\net40\BlockchainAPI.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mono.Nat">
+      <HintPath>..\packages\NBitcoin.1.0.8.19\lib\net45\Mono.Nat.dll</HintPath>
+    </Reference>
+    <Reference Include="NBitcoin">
+      <HintPath>..\packages\NBitcoin.1.0.8.19\lib\net45\NBitcoin.dll</HintPath>
+    </Reference>
+    <Reference Include="NBitcoin.BouncyCastle">
+      <HintPath>..\packages\NBitcoin.1.0.8.19\lib\net45\NBitcoin.BouncyCastle.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -53,9 +62,15 @@
     <Reference Include="Parse.NetFx45">
       <HintPath>..\packages\Parse.1.4.1\lib\net45\Parse.NetFx45.dll</HintPath>
     </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.96.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />

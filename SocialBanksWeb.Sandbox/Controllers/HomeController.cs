@@ -1,4 +1,5 @@
 ﻿using Info.Blockchain.API.PushTx;
+using NBitcoin;
 using Parse;
 using SocialBanks.Lib;
 using System;
@@ -123,8 +124,18 @@ namespace SocialBanksWeb.Controllers
 
         [HttpPost]
         public string sign_transaction_server(string tx)
-        {            
-            return "hexa_assinado";
+        {
+            var privKeyServer = Key.Parse("KwPGv91ZJUB3UShXBWAZAzBXjYCkMgpoXbryW3dwW3B66pWivMRE", Network.Main);
+            var txClient = new Transaction(tx);
+
+            var txBuilder = new TransactionBuilder();
+            var transactionToSign = txBuilder
+                    .AddKeys(privKeyServer)
+                    .SignTransaction(txClient);
+
+            transactionToSign.Sign(privKeyServer, true);
+
+            return transactionToSign.ToHex();
         }
 
         
