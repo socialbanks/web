@@ -527,7 +527,7 @@ namespace SocialBanksLib.NetworkedTests
                         .AddKnownRedeems(client1ScriptPubKey)
                         .Send(addrFabricioWallet, "0.00001")
                         .SetChange(client1P2SHAddress)
-                        .BuildTransaction(true); //false => don't generate any "input script"
+                        .BuildTransaction(false); //false => don't generate any "input script"
 
                 // Assert.AreNotEqual(rawTx2, rawTx1);
                 Assert.IsFalse(txBuilder.Verify(tx));
