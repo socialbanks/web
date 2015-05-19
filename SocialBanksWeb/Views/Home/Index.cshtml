@@ -62,8 +62,12 @@
                                     </div>
                                 </div>
                                 -->
-                                <div class="col-xs-12 donate-now">
+                                <div class="col-xs-12 donate-now" address="@obj.bitcoinAddressForDonation">
+                                    <div class="address-qrcode" hidden>
+                                        &nbsp;
+                                    </div>
                                     <button class="btn btn-primary social-bank-donate-button">Donate Now!</button>
+                                    <button class="btn btn-warning social-bank-cancel-donation-button" style="display: none;">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -84,16 +88,13 @@
     </div>
     <!--/.container-->
 </section>
-<!-- content-29 -->
-<section class="content-29">
-    <div class="container">
-        <div class="player">
-            <div class="youtube-container">
-                <div class="youtube-player" data-id="FQNyFYn6318"></div>
-            </div>
+<div class="container">
+    <div class="player">
+        <div class="youtube-container">
+            <div class="youtube-player" data-id="FQNyFYn6318"></div>
         </div>
     </div>
-</section>
+</div>
 <section class="blog-3 social-banks-section" id="sb-section">
     <div class="container">
         <div class="row">
@@ -101,8 +102,6 @@
                 <div class="section-main-title">
                     <h3>Social Banks</h3>
                 </div>
-                
-
                 <div class="quote custom-quote">
                     In a situation of profit, you're blind. Only the dollar signs come in sight. Remove the dollar signs in their eyes and suddenly you will see another world. It's a fascinating world!
                 </div>
@@ -141,6 +140,8 @@
         </div>
     </div>
 </section>
+
+
 
 <section id="dc-section" class="blog-2 digital-currencies">
     <div class="background hidden-xs">
@@ -365,8 +366,8 @@
             <div class="member-wrapper">
                 <div class="member">
                     <div class="photo-wrapper">
-                        <div class="photo" style="background-image: url(/Content/themes/common-files/img/crew/Marcos.png);">
-                            <img src="~/Content/themes/common-files/img/crew/marcos.jpg" alt="" style="display: none;">
+                        <div class="photo" style="background-image: url(/Content/themes/common-files/img/crew/adrian-v-1.png);">
+                            <img src="~/Content/themes/common-files/img/crew/adrian-v-1.png" alt="" style="display: none;">
                         </div>
                         <div class="overlay">
                             <span class="fui-eye"></span>
@@ -411,9 +412,11 @@
     @Scripts.Render("~/bundles/easing")
     @Scripts.Render("~/bundles/jquerysvg")
     @Scripts.Render("~/bundles/jquerysvganim")
-    @Scripts.Render("~/Scripts/custom/indexpagenav.js")
     @Scripts.Render("~/bundles/youtubejs")
+    @Scripts.Render("~/Scripts/custom/indexpagenav.js")
+    @Scripts.Render("~/Scripts/jquery-qrcode/jquery.qrcode-0.11.0.js")
     <script>
+        /* Youtube video - dinamyc iframe*/
         (function () {
             var v = document.getElementsByClassName('youtube-player');
 
@@ -436,6 +439,42 @@
             iframe.setAttribute("id", "youtube-iframe");
             this.parentNode.replaceChild(iframe, this);
         }
+
+        /* QR-CODE generation  */
+        $('button.social-bank-donate-button').click(function () {
+            var button = $(this);
+
+            var ddiv = button.closest('div.donate-now');
+            
+            var qrdiv = ddiv.find('div.address-qrcode');
+
+            button.hide(100);
+            ddiv.find('button.social-bank-cancel-donation-button').show(200);
+
+            if (qrdiv.hasClass('qrcode-generated')) {
+                qrdiv.show(200);
+            } else {
+                qrdiv.qrcode({
+                    'width': 100,
+                    'height': 100,
+                    'text': ddiv.attr('address')
+                }).addClass('qrcode-generated').show(200);
+            }
+
+        });
+
+        /* hide QR-CODE */
+        $('button.social-bank-cancel-donation-button').click(function () {
+            var button = $(this);
+
+            var ddiv = button.closest('div.donate-now');
+
+            button.hide(100);
+            ddiv.find('div.address-qrcode').hide(100);
+            ddiv.find('button.social-bank-donate-button').show(200);
+
+        });
+
         new HomeIndex($).Ready();
     </script>
 }

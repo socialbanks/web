@@ -567,6 +567,7 @@
     <Content Include="Content\themes\ui-kit\ui-kit-projects\css\style.css" />
     <Content Include="Content\themes\ui-kit\ui-kit-projects\css\ui-kit-styles.css" />
     <Content Include="Content\themes\ui-kit\ui-kit-projects\index.html" />
+    <Content Include="Content\themes\wizzard\prettify.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\themes\common-files\fonts\Startup-Icons.eot" />
@@ -801,6 +802,8 @@
     <Content Include="Scripts\jquery-1.8.3.min.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
+    <Content Include="Scripts\jquery-qrcode\jquery.qrcode-0.11.0.js" />
+    <Content Include="Scripts\jquery-qrcode\jquery.qrcode-0.11.0.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
