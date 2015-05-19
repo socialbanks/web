@@ -3,12 +3,11 @@
 
     self.Passphrase = "";
 
-    //bitcore = require('bitcore');
-    //var explorer = require('bitcore-explorers');
+    //var bitcore = require('bitcore');
 
     this.CreateKeys = function () {
         console.log('Test');
-        
+
         //address = 1JeMty246HPfyGJEUJqswmP8xQUiCqUjMA
         var privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3198ae925614d70210e28716cca0000000000');
         console.log(privateKey);
@@ -88,14 +87,14 @@
         Parse.initialize("bCOd9IKjrpxCPGYQfyagabirn7pYFjYTvJqkq1x1", "mu3goJMujN0svROX9d1ssE0R7N4q1r3mC9FR8ejP");
 
         // Call the Cloud Code 'yodaSpeakFunction'
-        Parse.Cloud.run('send', 
+        Parse.Cloud.run('send',
             {
                 "source": "1JeMty246HPfyGJEUJqswmP8xQUiCqUjMA",
                 "destination": "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
                 "quantity": 1500000000,
                 "asset": "BRAZUCA",
-               // "pubkey": "1JeMty246HPfyGJEUJqswmP8xQUiCqUjMA"
-                
+                // "pubkey": "1JeMty246HPfyGJEUJqswmP8xQUiCqUjMA"
+
             },
             {
                 success: function (result) {
@@ -218,7 +217,9 @@
     this.SendBrazuca3 = function () {
 
         console.log('SendBrazuca3');
-        var w = new CWHierarchicalKey('passphrase')
+        console.log('put a valid 12 word passphrase below');
+        return;
+        var w = new CWHierarchicalKey('--passphrase--')
 
         console.log(w);
 
@@ -255,9 +256,7 @@
 
                     console.log(signedHEX);
 
-                    var signedTx = new bitcore.Transaction(signedHEX);
-
-                    //this.broadcast(signedTx);
+                    self.broadcast(signedHEX);
                 },
                 error: function (error) {
                     console.log("#error");
@@ -269,20 +268,47 @@
 
     }
 
+    this.SendBrazuca4 = function () {
+
+        var hexa = '01000000012dce3e102e770b30aa0ecddc99fd1cbdcb8fd9a899e3d3083fc9b76019797f66030000006c493046022100bfe726bcc7994b25345d7d4fe2d0b66cb112ecaf1801158e3f8038a64ba2b1cc022100dd438baa2325d78eb4605af27fb55f10d20dc435abbc38cbb6140232615fa67e01210321bab6d17f75ebbbdd71793fa9c1136b537e5679ea2fc153fa1cb0884d038834ffffffff0436150000000000001976a914748e483222863a836a421df1a9395bbd835bdfda88ac36150000000000001976a9142824a385d37205caf61c8cffc6b0c95d27594d5e88ac36150000000000001976a9142a24a385d37205caf6508cffc6b0cca8c64737c388ac46e17800000000001976a914ce27246a0a6ca54dfa1f780ccd5cb3d0c73a75b288ac00000000';
+        var signedTx = new bitcore.Transaction(hexa);
+        console.log(signedTx);
+        //self.broadcast(signedTx);
+        self.broadcast(hexa);
+    }
+
     this.RunAll = function () {
         //this.CreateKeys();
         //this.CreateTransaction();
         //this.SendBrazuca1();
         //this.SendBrazuca2();
+
         this.SendBrazuca3();
+        //this.SendBrazuca4();
     }
 
-    this.broadcast = function (tx) {
-        insight.broadcast(tx, function (err, txid) {
-            if (err != null) {
-                window.console.log('Broadcast Error:', err);
+    //var Insight = require('bitcore-explorers').Insight;
+    //var insight = new Insight("https://test-insight.bitpay.com");
+
+    this.broadcast = function (transaction) {
+        $.ajax(
+            {
+                url: 'PostTx',
+                method: 'POST',
+                data: {
+                    txHexa: transaction
+                },
+                success: function (response) {
+                    console.log(response);
+                }
+            }
+            );
+        return;
+        insight.broadcast(transaction, function (err, returnedTxId) {
+            if (err) {
+                console.log(err);
             } else {
-                window.console.log('txid:', txid);
+                console.log(returnedTxId);
             }
         });
     }
