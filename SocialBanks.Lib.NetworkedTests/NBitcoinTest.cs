@@ -226,6 +226,85 @@ namespace SocialBanksLib.NetworkedTests
         }
 
         [TestMethod]
+        public void CreateMultiSigManually()
+        {
+            //Only SocialBanks know this privKey
+            var privKeyServer = Key.Parse("KwPGv91ZJUB3UShXBWAZAzBXjYCkMgpoXbryW3dwW3B66pWivMRE", Network.Main);
+            var strPubKey = privKeyServer.PubKey.ToHex(); //0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8
+
+            ////////////////////////////////////////ok
+            //Client-side part (mobile wallet)
+            ////////////////////////////////////////
+
+            var pubKeyServer = new PubKey("0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8");
+            var addressServer = pubKeyServer.GetAddress(Network.Main); // => 14pkzzJbAg1N3EFkEnc4o5uHQJAzCqUUFJ
+
+            var privKeyClient1 = Key.Parse("KxyACdWtFEY6p2nAbSAZv9NXgmJNm4i6HDUjgoy1YtVFTskV75KX");
+            var pubKeyClient1 = privKeyClient1.PubKey;
+            var AddressClient1 = privKeyClient1.PubKey.GetAddress(Network.Main); // => AWXoDzdqqSbf3Fo7yKozXX2aP9nvmsVse
+
+            var addrFabricioWallet = new BitcoinAddress("1FTuKcjGUrMWatFyt8i1RbmRzkY2V9TDMG");
+
+            Script scriptPubKey2of2 = new Script(
+                OpcodeType.OP_2,
+                Op.GetPushOp(pubKeyClient1.ToBytes()),
+                Op.GetPushOp(pubKeyServer.ToBytes()),
+                OpcodeType.OP_2,
+                OpcodeType.OP_CHECKMULTISIG
+            );
+
+
+            Transaction tx = new Transaction();
+            tx.Inputs.Add(new TxIn());
+            tx.Inputs[0].PrevOut.N = 0;
+            tx.Inputs[0].PrevOut.Hash = new uint256("b6cf378b95a14eef35b979c01fecbcf432f6fa220858d3c1c18ca1b5ea1741dd"); //pegar via https://blockchain.info/pt/unspent?active=3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi
+            tx.Inputs[0].ScriptSig = sign_multisig(scriptPubKey2of2, privKeyClient1, tx);
+            /*
+            tx.Outputs.Add(new TxOut());
+            tx.Outputs[0].Value = 1;
+            txFrom.Outputs[0].ScriptPubKey = scriptPubKey2of2;
+
+
+            Transaction txFrom = new Transaction();
+            txFrom.Outputs.Add(new TxOut());
+            txFrom.Outputs[0].ScriptPubKey = scriptPubKey2of2;
+            */
+        }
+
+        Script sign_multisig(Script scriptPubKey, Key[] keys, Transaction transaction)
+        {
+            uint256 hash = scriptPubKey.SignatureHash(transaction, 0, SigHash.All);
+
+            List<Op> ops = new List<Op>();
+            //CScript result;
+            //
+            // NOTE: CHECKMULTISIG has an unfortunate bug; it requires
+            // one extra item on the stack, before the signatures.
+            // Putting OP_0 on the stack is the workaround;
+            // fixing the bug would mean splitting the block chain (old
+            // clients would not accept new CHECKMULTISIG transactions,
+            // and vice-versa)
+            //
+            ops.Add(OpcodeType.OP_0);
+            foreach (Key key in keys)
+            {
+                var vchSig = key.Sign(hash).ToDER().ToList();
+                vchSig.Add((byte)SigHash.All);
+                ops.Add(Op.GetPushOp(vchSig.ToArray()));
+            }
+            return new Script(ops.ToArray());
+        }
+
+        Script sign_multisig(Script scriptPubKey, Key key, Transaction transaction)
+        {
+            return sign_multisig(scriptPubKey, new Key[] { key }, transaction);
+        }
+
+
+        //https://coinb.in/#verify
+        //https://blockchain.info/decode-tx
+        //https://blockchain.info/pushtx
+        [TestMethod]
         public void CreateMultiSig()
         {
             //Only SocialBanks know this privKey
@@ -338,6 +417,134 @@ namespace SocialBanksLib.NetworkedTests
 
         }
 
+        [TestMethod]
+        public void CreateMultiSig_SignTogether()
+        {
+            //Only SocialBanks know this privKey
+            var privKeyServer = Key.Parse("KwPGv91ZJUB3UShXBWAZAzBXjYCkMgpoXbryW3dwW3B66pWivMRE", Network.Main);
+            var strPubKey = privKeyServer.PubKey.ToHex(); //0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8
+
+            ////////////////////////////////////////ok
+            //Client-side part (mobile wallet)
+            ////////////////////////////////////////
+
+            var pubKeyServer = new PubKey("0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8");
+            var addressServer = pubKeyServer.GetAddress(Network.Main); // => 14pkzzJbAg1N3EFkEnc4o5uHQJAzCqUUFJ
+
+            var privKeyClient1 = Key.Parse("KxyACdWtFEY6p2nAbSAZv9NXgmJNm4i6HDUjgoy1YtVFTskV75KX");
+            var pubKeyClient1 = privKeyClient1.PubKey;
+            var AddressClient1 = privKeyClient1.PubKey.GetAddress(Network.Main); // => AWXoDzdqqSbf3Fo7yKozXX2aP9nvmsVse
+
+            var addrFabricioWallet = new BitcoinAddress("1FTuKcjGUrMWatFyt8i1RbmRzkY2V9TDMG");
+
+            {
+                //{2 0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8 03d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de 2 OP_CHECKMULTISIG}
+                Script client1ScriptPubKey =
+                    PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { pubKeyServer, pubKeyClient1 });
+                var client1P2SHAddress = client1ScriptPubKey.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	
+
+
+                //https://blockchain.info/pt/unspent?active=3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi
+                //We should be able to offer the "967f947b7f995d7f45c4ce1f6eb42baf58376d8f9ba768322d2abe858f3bd272" unspend transaction.
+                var txHash = new uint256("967f947b7f995d7f45c4ce1f6eb42baf58376d8f9ba768322d2abe858f3bd272");
+
+                Transaction client1P2SH = new Transaction()
+                {
+                    Outputs = { new TxOut("0.00101000", client1P2SHAddress) }
+                };
+
+                //Coin array = new transaction input array
+                Coin[] client1CoinsP2SH = client1P2SH
+                    .Outputs
+                    .Select((outp, i) => new ScriptCoin(new OutPoint(txHash, i), outp, client1ScriptPubKey))
+                    .ToArray();
+
+                var txBuilder = new TransactionBuilder();
+                var tx = txBuilder
+                        .AddCoins(client1CoinsP2SH)
+                        .AddKeys(privKeyClient1, privKeyServer)
+                        .AddKnownRedeems(client1ScriptPubKey)
+                        .Send(addrFabricioWallet, "0.001")
+                        .SetChange(client1P2SHAddress)
+                        .BuildTransaction(true); //false => don't generate any "input script"
+
+               // Assert.AreNotEqual(rawTx2, rawTx1);
+                Assert.IsTrue(txBuilder.Verify(tx));
+
+                //valid transaction!!!
+                //0100000001dd4117eab5a18cc1c1d3580822faf632f4bcec1fc079b935ef4ea1958b37cfb600000000da0047304402207e7d55441fc23843863a50925235c1a3e7a8a311a379e052e04ec8c37f58eaab02204dda0f748e0b44b9b5e9c11ca74f63911e7e417a696c9d570b979808029841d501483045022100a17271d87dc1ab36ebf9aa449cd1daae33aa4ad44b55f4a661b1a01e90b6411002200384b19d8246f8cdb8f5d7ac04a1e25730023dc912d57b1c9a8c70eb587787c8014752210213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c82103d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de52aeffffffff02e80300000000000017a914ff26223bbaa71dbaec1693059c1feb5d1e14b8f487a0860100000000001976a9149ea84056a5a9e294d93f11300be51d51868da69388ac00000000
+
+            }
+
+        }
+
+        [TestMethod]
+        public void CreateMultiSig_SignApart()
+        {
+            //Only SocialBanks know this privKey
+            var privKeyServer = Key.Parse("KwPGv91ZJUB3UShXBWAZAzBXjYCkMgpoXbryW3dwW3B66pWivMRE", Network.Main);
+            var strPubKey = privKeyServer.PubKey.ToHex(); //0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8
+
+            ////////////////////////////////////////ok
+            //Client-side part (mobile wallet)
+            ////////////////////////////////////////
+
+            var pubKeyServer = new PubKey("0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8");
+            var addressServer = pubKeyServer.GetAddress(Network.Main); // => 14pkzzJbAg1N3EFkEnc4o5uHQJAzCqUUFJ
+
+            var privKeyClient1 = Key.Parse("KxyACdWtFEY6p2nAbSAZv9NXgmJNm4i6HDUjgoy1YtVFTskV75KX");
+            var pubKeyClient1 = privKeyClient1.PubKey;
+            var AddressClient1 = privKeyClient1.PubKey.GetAddress(Network.Main); // => AWXoDzdqqSbf3Fo7yKozXX2aP9nvmsVse
+
+            var addrFabricioWallet = new BitcoinAddress("1FTuKcjGUrMWatFyt8i1RbmRzkY2V9TDMG");
+
+            {
+                //{2 0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8 03d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de 2 OP_CHECKMULTISIG}
+                Script client1ScriptPubKey =
+                    PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { pubKeyServer, pubKeyClient1 });
+                var client1P2SHAddress = client1ScriptPubKey.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	
+
+
+                //https://blockchain.info/pt/unspent?active=3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi
+                //We should be able to offer the "0d2d6157088dc1c2efd826dbba2d647df2dcedaa3f0cd13834bc030d9552173d" unspend transaction.
+                var txHash = new uint256("0d2d6157088dc1c2efd826dbba2d647df2dcedaa3f0cd13834bc030d9552173d");
+
+                Transaction client1P2SH = new Transaction()
+                {
+                    Outputs = { new TxOut("0.00001", client1P2SHAddress) }
+                };
+
+                //Coin array = new transaction input array
+                Coin[] client1CoinsP2SH = client1P2SH
+                    .Outputs
+                    .Select((outp, i) => new ScriptCoin(new OutPoint(txHash, i), outp, client1ScriptPubKey))
+                    .ToArray();
+
+                var txBuilder = new TransactionBuilder();
+                var tx = txBuilder
+                        .AddCoins(client1CoinsP2SH)
+                        .AddKeys(privKeyClient1)
+                        .AddKnownRedeems(client1ScriptPubKey)
+                        .Send(addrFabricioWallet, "0.00001")
+                        .SetChange(client1P2SHAddress)
+                        .BuildTransaction(true); //false => don't generate any "input script"
+
+                // Assert.AreNotEqual(rawTx2, rawTx1);
+                Assert.IsFalse(txBuilder.Verify(tx));
+
+                var rawTx = tx.ToHex();
+
+                var tx2 = new Transaction(rawTx);
+
+                tx2.Sign(privKeyServer, true);
+
+                Assert.IsTrue(txBuilder.Verify(tx2));
+                //valid transaction!!!
+                //0100000001dd4117eab5a18cc1c1d3580822faf632f4bcec1fc079b935ef4ea1958b37cfb600000000da0047304402207e7d55441fc23843863a50925235c1a3e7a8a311a379e052e04ec8c37f58eaab02204dda0f748e0b44b9b5e9c11ca74f63911e7e417a696c9d570b979808029841d501483045022100a17271d87dc1ab36ebf9aa449cd1daae33aa4ad44b55f4a661b1a01e90b6411002200384b19d8246f8cdb8f5d7ac04a1e25730023dc912d57b1c9a8c70eb587787c8014752210213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c82103d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de52aeffffffff02e80300000000000017a914ff26223bbaa71dbaec1693059c1feb5d1e14b8f487a0860100000000001976a9149ea84056a5a9e294d93f11300be51d51868da69388ac00000000
+
+            }
+
+        }
 
         [TestMethod]
         public void GetUnspendTransactions()
