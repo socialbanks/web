@@ -27,7 +27,9 @@ var PageTransitions = function() {
       $page.data('originalClassList', $page.attr('class'));
     }).eq(0).addClass('pt-page-current');
 
-    $main.get(0).className = $main.get(0).className.replace(/\s*pt-item-\d+\s*/ig, ' ');
+    if (typeof $main.get(0) !== 'undefined') {
+        $main.get(0).className = $main.get(0).className.replace(/\s*pt-item-\d+\s*/ig, ' ');
+    }
     $main.addClass('pt-item-1');
     $main.addClass('pt-first');
     if (pagesCount == 1) {

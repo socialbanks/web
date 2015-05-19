@@ -22,7 +22,6 @@
 }
 .social-bank-cover {
     background-color: #808080;
-    min-height: 200px;
 }
 .social-bank-info {
     padding: 15px;
@@ -95,3 +94,14 @@
   background-position: 50% !important;
 }
 
+.project-wrapper {
+    margin-bottom: 50px;
+}
+.custom-border-radius {
+    border-radius: 2px !important;
+}
+.sbb-balance {
+    font-weight: bold;
+    font-size: 16px;
+    color: #2a3a2a;
+}

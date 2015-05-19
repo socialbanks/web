@@ -277,7 +277,7 @@ namespace SocialBanks.Lib.NetworkedTests
             q.Wait();
             var result = q.Result;
 
-            Assert.AreEqual(19, result.Count());
+            Assert.AreEqual(8, result.Count());
 
         }
 

@@ -21,9 +21,18 @@ namespace SocialBanksWeb.Controllers
             APIHelper.Initialize(keysFilePath);
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var banks = await APIHelper.get_socialbanks();
+
+            List<SocialBankModel> sbs = new List<SocialBankModel>();
+
+            foreach (ParseObject obj in banks) {
+                var sb = new SocialBankModel(obj);
+                sbs.Add(sb);
+            }
+
+            return View(sbs);
         }
 
         public ActionResult CreateSocialBank()

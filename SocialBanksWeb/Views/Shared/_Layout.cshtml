@@ -8,7 +8,7 @@
         @Styles.Render("~/Content/bootstrapcss")
         @Styles.Render("~/Content/flatuicss")
         @Styles.Render("~/Content/iconfont")
-        @Styles.Render("~/Content/animations")
+        @Styles.Render("~/Content/animations"   )
 
         @Styles.Render("~/Content/headercss")
         @Styles.Render("~/Content/footercss")
@@ -20,34 +20,16 @@
     </head>
     <body>
         <div class="page-wrapper">
-            <header class="header-3">
-                <div class="container">
-                    <div class="row">
-                        <nav class="navbar col-sm-12" role="navigation">
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle"></button>
-                                @Html.ActionLink("Social Banks", "Index", new { controller = "Home" }, new { @class = "brand"})
-                            </div>
-                            <div class="collapse navbar-collapse pull-right">
-                                <form class="navbar-form pull-left">
-                                    @Html.ActionLink("REGISTER NEW SOCIAL BANK", "Create", new { controller = "SocialBank" }, new { @class = "btn btn-warning" })
-                                    @Html.ActionLink("SIGN IN", "Login", new { controller = "Account" }, new { @class = "btn btn-primary" })
-                                </form>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
-                <div class="header-background"></div>
-            </header>
-            <!-- header-1 -->
+            <!-- Header 1 -->
             <header class="header-1">
                 <div class="container">
                     <div class="row">
-                        <nav class="navbar col-sm-12" role="navigation">
+                        <div class="navbar col-sm-12 navbar-fixed-top" role="navigation">
                             <div class="navbar-header">
                                 <button type="button" class="navbar-toggle"></button>
+                                <a class="brand" href="#">Social Banks</a>
                             </div>
-                            <div class="collapse navbar-collapse">
+                            <div class="navbar-collapse collapse">
                                 <ul class="nav pull-right">
                                     <li>
                                         <a href="#sb-section" class="social-banks-list-link">SOCIAL BANKS</a>
@@ -83,31 +65,46 @@
                                     </li>
                                 </ul>
                             </div>
-                        </nav>
+                        </div>
                     </div>
                 </div>
             </header>
-
             <section class="header-1-sub">
-                <div id="pt-main" class="page-transitions pt-perspective  pt-item-1 pt-first">
-                    <div class="pt-page pt-page-1 pt-page-current">
-                        <div class="background custom-background-image">&nbsp;</div>
+                <div id="pt-main" class="page-transitions pt-perspective">
+                    <div class="pt-page pt-page-1">
+                        <div class="background custom-background-image">
+                            &nbsp;
+                        </div>
                         <div class="caption">
                             <div class="container">
                                 <h3>
-                                    We believe that technology can be a very effective tool in the fight against poverty.
+                                    We believe that technology can be a very effective tool <br />
+                                    in the fight against poverty.
                                 </h3>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-
+            <div class="container-fluid">
+                <div class="row">
+                    <nav class="navbar col-sm-12" role="navigation">
+                        <div class="collapse navbar-collapse pull-right">
+                            <form class="navbar-form">
+                                @Html.ActionLink("REGISTER NEW SOCIAL BANK", "Create", new { controller = "SocialBank" }, new { @class = "btn btn-success custom-border-radius" })
+                                @Html.ActionLink("SIGN IN", "Login", new { controller = "Account" }, new { @class = "btn btn-primary custom-border-radius" })
+                            </form>
+                        </div>
+                    </nav>
+                </div>
+            </div>
             <div class="delimiter"></div>
             
             @RenderBody()
             
-            <!-- footer-9 -->
+            <div class="delimiter"></div>
+
+            <!-- footer-1 -->
             <footer class="footer-1 bg-midnight-blue v-center">
                 <div>
                     <div class="container">

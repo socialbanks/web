@@ -26,8 +26,9 @@ namespace SocialBanks.Lib
         {
             var query = from bank in ParseObject.GetQuery("SocialBank")
                         where bank.Get<bool>("approved") == true
+                        orderby bank.Get<int>("totalActiveSocialMoney") descending, bank.Get<int>("onlineSocialMoneyBalance")
                         select bank;
-            var q = await query.FindAsync();
+            var q = await query.Limit(8).FindAsync();
 
             return q;
         }
@@ -36,7 +37,6 @@ namespace SocialBanks.Lib
         {
             return await ParseCloud.CallFunctionAsync<string>("hello", new Dictionary<string, object>());
         }
-
 
         public async Task<DtoApiResponse<List<DtoAsset>>> get_balances(params string[] adresses)
         {
