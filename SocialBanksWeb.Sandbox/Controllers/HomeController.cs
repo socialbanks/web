@@ -113,7 +113,7 @@ namespace SocialBanksWeb.Controllers
             };
             resultList.Add(it);
         }
-
+        
         [HttpPost]
         public JsonResult PostTx(string txHexa)
         {
@@ -121,6 +121,13 @@ namespace SocialBanksWeb.Controllers
             return Json("success");
         }
 
+        [HttpPost]
+        public string sign_transaction_server(string tx)
+        {            
+            return "hexa_assinado";
+        }
+
+        
 
 
     }
