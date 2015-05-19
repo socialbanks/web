@@ -568,9 +568,9 @@ namespace SocialBanksLib.NetworkedTests
 
             {
                 //{2 0213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c8 03d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de 2 OP_CHECKMULTISIG}
-                Script client1ScriptPubKey =
+                Script redeemMultiSigScript =
                     PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { pubKeyServer, pubKeyClient1 });
-                var client1P2SHAddress = client1ScriptPubKey.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	
+                var client1P2SHAddress = redeemMultiSigScript.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	
 
 
                 //https://blockchain.info/pt/unspent?active=3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi
@@ -586,14 +586,14 @@ namespace SocialBanksLib.NetworkedTests
                 //Coin array = new transaction input array
                 Coin[] client1CoinsP2SH = client1P2SH
                     .Outputs
-                    .Select((outp, i) => new ScriptCoin(new OutPoint(txHash, i), outp, client1ScriptPubKey))
+                    .Select((outp, i) => new ScriptCoin(new OutPoint(txHash, i), outp, redeemMultiSigScript))
                     .ToArray();
 
                 var txBuilder = new TransactionBuilder();
                 var tx = txBuilder
                         .AddCoins(client1CoinsP2SH)
                         .AddKeys(privKeyClient1)
-                        .AddKnownRedeems(client1ScriptPubKey)
+                        .AddKnownRedeems(redeemMultiSigScript)
                         .Send(addrFabricioWallet, "0.001")
                         .SetChange(client1P2SHAddress, ChangeType.All)
                         .BuildTransaction(true); //false => don't generate any "input script"
@@ -609,7 +609,7 @@ namespace SocialBanksLib.NetworkedTests
 
                 Assert.IsTrue(true);
                 //valid transaction!!!
-                //0100000001dd4117eab5a18cc1c1d3580822faf632f4bcec1fc079b935ef4ea1958b37cfb600000000da0047304402207e7d55441fc23843863a50925235c1a3e7a8a311a379e052e04ec8c37f58eaab02204dda0f748e0b44b9b5e9c11ca74f63911e7e417a696c9d570b979808029841d501483045022100a17271d87dc1ab36ebf9aa449cd1daae33aa4ad44b55f4a661b1a01e90b6411002200384b19d8246f8cdb8f5d7ac04a1e25730023dc912d57b1c9a8c70eb587787c8014752210213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c82103d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de52aeffffffff02e80300000000000017a914ff26223bbaa71dbaec1693059c1feb5d1e14b8f487a0860100000000001976a9149ea84056a5a9e294d93f11300be51d51868da69388ac00000000
+                //0100000001277143347e32561178e73d59dd142ef9f7069e4f07aa955e95e84795921f3587000000009200483045022100b6efe20574c8881260f4d7dc55903805f84e2922c7cd3389401959857fca5ea6022032e2582a09fc8c92727c2e1e8ef60d32b5b7acfae28b702e21957ea4dd4ff5f90147522103d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de210213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c852aeffffffff02b0710b000000000017a914ff26223bbaa71dbaec1693059c1feb5d1e14b8f487a0860100000000001976a9149ea84056a5a9e294d93f11300be51d51868da69388ac00000000
 
             }
 
