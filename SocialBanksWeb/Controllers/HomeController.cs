@@ -96,7 +96,115 @@ namespace SocialBanksWeb.Controllers
             return transactionToSign.ToHex();
         }
 
+        //It's important to send the serverWIF because anyone can invoke this method. Otherwise we expose the system security.
+        //Must be HTTPS!!!!!
+        [HttpPost]
+        public JsonResult create_and_sign_transaction(string receiverAddr, string valueInSatoshis, string clientWIF /*for test*/)
+        {
+            var result = new DtoSignedTransaction()
+            {
+                RawTx = "",
+                TransferedValue = 0,
+                FeeValue = 0,
+                Success = true,
+                Message = "Running async"
+            };
 
+            try
+            {
+
+                var apiHelper = new APIHelper();
+                apiHelper.set_transaction_broadcasted();
+
+                BitcoinHelper.Log = "Controle - Ponto 1";
+
+                var keys = System.IO.File.ReadAllLines(KeysFilePath);
+                var privKeyServer = keys[2];
+
+                BitcoinHelper.Log += " | Controle - Ponto 2";
+
+                var btcHelper = new BitcoinHelper();
+
+                BitcoinHelper.Log += " | Controle - Ponto 3";
+                BitcoinHelper.Log += " | Params: " + privKeyServer + "," + clientWIF + "," + receiverAddr + "," + valueInSatoshis;
+                
+                var task = btcHelper.CreateAndSignP2SHTransactionAsync(privKeyServer, clientWIF, receiverAddr, long.Parse(valueInSatoshis));
+            }
+            catch (Exception e)
+            {
+                result = new DtoSignedTransaction()
+                {
+                    RawTx = "",
+                    TransferedValue = 0,
+                    FeeValue = 0,
+                    Success = false,
+                    Message = e.Message + " :: " + BitcoinHelper.Log
+                };
+            }
+
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult create_and_sign_transaction_ORIGINAL(string receiverAddr, string valueInSatoshis, string clientWIF /*for test*/)
+        {
+            var result = new DtoSignedTransaction();
+
+            //result = new DtoSignedTransaction()
+            //{
+            //    RawTx = "TESTE",
+            //    TransferedValue = 0,
+            //    FeeValue = 0,
+            //    Success = false,
+            //    Message = ""
+            //};
+            //return Json(result);
+
+            try
+            {
+                BitcoinHelper.Log = "Controle - Ponto 1";
+
+                var keys = System.IO.File.ReadAllLines(KeysFilePath);
+                var privKeyServer = keys[2];
+
+                BitcoinHelper.Log += " | Controle - Ponto 2";
+
+                var btcHelper = new BitcoinHelper();
+
+                BitcoinHelper.Log += " | Controle - Ponto 3";
+                BitcoinHelper.Log += " | Params: " + privKeyServer + "," + clientWIF + "," + receiverAddr + "," + valueInSatoshis;
+
+                result = btcHelper.CreateAndSignP2SHTransaction(privKeyServer, clientWIF, receiverAddr, long.Parse(valueInSatoshis));
+            }
+            catch (Exception e)
+            {
+                result = new DtoSignedTransaction()
+                {
+                    RawTx = "",
+                    TransferedValue = 0,
+                    FeeValue = 0,
+                    Success = false,
+                    Message = e.Message + " :: " + BitcoinHelper.Log
+                };
+            }
+
+
+            return Json(result);
+        }
+        /*
+                $.ajax({
+                    url: "/home/create_and_sign_transaction",
+                    method: "POST",
+                    data:
+                        {
+                            receiverAddr: "1FTuKcjGUrMWatFyt8i1RbmRzkY2V9TDMG",
+                            valueInSatoshis: 10000,
+                            clientWIF: "KxyACdWtFEY6p2nAbSAZv9NXgmJNm4i6HDUjgoy1YtVFTskV75KX"
+                        }
+                });
+
+         */
 
 
     }

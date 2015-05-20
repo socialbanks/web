@@ -33,14 +33,33 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Nat">
+      <HintPath>..\packages\NBitcoin.1.0.8.19\lib\net45\Mono.Nat.dll</HintPath>
+    </Reference>
+    <Reference Include="NBitcoin">
+      <HintPath>..\packages\NBitcoin.1.0.8.19\lib\net45\NBitcoin.dll</HintPath>
+    </Reference>
+    <Reference Include="NBitcoin.BouncyCastle">
+      <HintPath>..\packages\NBitcoin.1.0.8.19\lib\net45\NBitcoin.BouncyCastle.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Parse">
       <HintPath>..\SocialBanksWeb\lib\Parse-1.4.1\Parse.dll</HintPath>
     </Reference>
     <Reference Include="Parse.NetFx45">
       <HintPath>..\SocialBanksWeb\lib\Parse-1.4.1\Parse.NetFx45.dll</HintPath>
     </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.96.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.96.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIHelper.cs" />
+    <Compile Include="BitcoinHelper.cs" />
     <Compile Include="DtoApiResponse.cs" />
     <Compile Include="DtoAsset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
