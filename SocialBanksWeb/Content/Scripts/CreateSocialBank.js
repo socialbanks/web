@@ -15,6 +15,7 @@
     }
 
     this.Click_finish = function () {
+        $('#success-message').html('');
         $('#error-message').html('');
 
         if (!$('#form-create-user').valid()) {
@@ -56,6 +57,8 @@
 
     this.success_PostUser = function (response) {
         console.log(response);
+        $('#div-create-user').hide();
+        $('#success-message').html(response);
     }
 
     this.error = function (response) {
