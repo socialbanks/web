@@ -3,26 +3,21 @@
 
     this.Ready = function () {
         $('#btn-create-bank').click(self.Click_create_bank);
-        $('#btn-create-user').click(self.Click_create_user);
-        $('#btn-create-passphrase').click(self.Click_create_passphrase);
         $('#btn-finish').click(self.Click_finish);
     }
 
     this.Click_create_bank = function () {
+        if (!$('#form-create-bank').valid()) {
+            return;
+        }
         $('#div-create-bank').hide();
         $('#div-create-user').show();
     }
 
-    this.Click_create_user = function () {
-        $('#div-create-user').hide();
-        $('#div-create-passphrase').show();        
-    }
-
-    this.Click_create_passphrase = function () {
-        $('#passphrase').val('yai yai yai yai ');
-    }
-
     this.Click_finish = function () {
+        if (!$('#form-create-user').valid()) {
+            return;
+        }
         self.Save();
     }
 
