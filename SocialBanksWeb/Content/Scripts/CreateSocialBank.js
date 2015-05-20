@@ -3,26 +3,24 @@
 
     this.Ready = function () {
         $('#btn-create-bank').click(self.Click_create_bank);
-        $('#btn-create-user').click(self.Click_create_user);
-        $('#btn-create-passphrase').click(self.Click_create_passphrase);
         $('#btn-finish').click(self.Click_finish);
     }
 
     this.Click_create_bank = function () {
+        if (!$('#form-create-bank').valid()) {
+            return;
+        }
         $('#div-create-bank').hide();
         $('#div-create-user').show();
     }
 
-    this.Click_create_user = function () {
-        $('#div-create-user').hide();
-        $('#div-create-passphrase').show();        
-    }
-
-    this.Click_create_passphrase = function () {
-        $('#passphrase').val('yai yai yai yai ');
-    }
-
     this.Click_finish = function () {
+        $('#success-message').html('');
+        $('#error-message').html('');
+
+        if (!$('#form-create-user').valid()) {
+            return;
+        }
         self.Save();
     }
 
@@ -35,7 +33,8 @@
                 url: 'PostSocialBank',
                 method: 'POST',
                 data: data,
-                success: self.success_PostSocialBank
+                success: self.success_PostSocialBank,
+                error: self.error
             }
             );
     }
@@ -49,7 +48,8 @@
                 url: 'PostUser',
                 method: 'POST',
                 data: data,
-                success: self.success_PostUser
+                success: self.success_PostUser,
+                error: self.error
             }
             );
 
@@ -57,6 +57,13 @@
 
     this.success_PostUser = function (response) {
         console.log(response);
+        $('#div-create-user').hide();
+        $('#success-message').html(response);
+    }
+
+    this.error = function (response) {
+        console.log(response);
+        $('#error-message').html(response.responseText);
     }
 
 }
