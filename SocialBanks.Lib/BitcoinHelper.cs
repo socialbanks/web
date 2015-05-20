@@ -24,6 +24,7 @@ namespace SocialBanks.Lib
     public class DtoSignedTransaction
     {
         public string RawTx { get; set; }
+        public string TxHash { get; set; }
         public long TransferedValue { get; set; }
         public long FeeValue { get; set; }
         public bool Success { get; set; }
@@ -114,7 +115,6 @@ namespace SocialBanks.Lib
 
         public DtoSignedTransaction CreateAndSignP2SHTransaction(string wifServer, string wifClient, string receiverAddress, long valueInSatoshis)
         {
-            BitcoinHelper.Log += " | Inicio";
             //Only SocialBanks know this privKey
             var privKeyServer = Key.Parse(wifServer, Network.Main);
             var pubKeyServer = privKeyServer.PubKey;
@@ -124,22 +124,18 @@ namespace SocialBanks.Lib
             var pubKeyClient1 = privKeyClient1.PubKey;
             var AddressClient1 = privKeyClient1.PubKey.GetAddress(Network.Main); // => AWXoDzdqqSbf3Fo7yKozXX2aP9nvmsVse
 
-            var receiverBtcAddress = new BitcoinAddress(receiverAddress);
 
-            BitcoinHelper.Log += " | Ponto 1";
+            //var receiverBtcAddress = new BitcoinAddress(receiverAddress, Network.Main); //P2PKH
+            var receiverBtcAddress = new BitcoinScriptAddress(receiverAddress, Network.Main); //P2SH
 
             Script client1P2SHScript =
                 PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { pubKeyServer, pubKeyClient1 });
             var client1P2SHAddress = client1P2SHScript.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	
 
-            BitcoinHelper.Log += " | Ponto 2";
-
             var apiHelper = new APIHelper();
             var task = FindUnspentTransactionsByAddress(client1P2SHAddress.ToString());
             task.Wait();
             List<DtoUnspentTransaction> unspentTrans = task.Result;
-
-            BitcoinHelper.Log += " | Ponto 3";
 
             var selectedUnspentTrans = new List<DtoUnspentTransaction>();
             long addressBalanceInSatoshis = 0;
@@ -153,8 +149,6 @@ namespace SocialBanks.Lib
                     break;
             }
 
-            BitcoinHelper.Log += " | Ponto 4";
-
             //if balance isn't sufficient
             if (addressBalanceInSatoshis < (valueInSatoshis + DEFAULT_FEE))
             {
@@ -163,8 +157,6 @@ namespace SocialBanks.Lib
 
             //var txHash = new uint256("967f947b7f995d7f45c4ce1f6eb42baf58376d8f9ba768322d2abe858f3bd272");
             //var totalInBtc = "0.002";
-
-            BitcoinHelper.Log += " | Ponto 5";
 
             Transaction client1P2SH = new Transaction();
             bool feePayed = false;
@@ -200,24 +192,18 @@ namespace SocialBanks.Lib
                     .SetChange(client1P2SHAddress)
                     .BuildTransaction(true); //false => don't generate any "input script"
             
-            
-            BitcoinHelper.Log += " | Ponto 6";
-
-
             var result = new DtoSignedTransaction()
             {
                 RawTx = tx.ToHex(),
+                TxHash = tx.GetHash().ToString(),
                 TransferedValue = valueInSatoshis,
                 FeeValue = DEFAULT_FEE,
                 Success = true,
                 Message = ""
             };
 
-
             return result;
-
         }
-
 
         public async Task<DtoSignedTransaction> CreateAndSignP2SHTransactionAsync(string wifServer, string wifClient, string receiverAddress, long valueInSatoshis)
         {
@@ -308,10 +294,12 @@ namespace SocialBanks.Lib
 
             BitcoinHelper.Log += " | Ponto 6";
 
+            
 
             var result = new DtoSignedTransaction()
             {
                 RawTx = tx.ToHex(),
+                TxHash = tx.GetHash().ToString(),
                 TransferedValue = valueInSatoshis,
                 FeeValue = DEFAULT_FEE,
                 Success = true,

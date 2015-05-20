@@ -501,6 +501,45 @@ namespace SocialBanksLib.NetworkedTests
         }
 
 
+        [TestMethod]
+        public void CreateP2SHAddressForTest()
+        {
+            var servWIF = "KwPGv91ZJUB3UShXBWAZAzBXjYCkMgpoXbryW3dwW3B66pWivMRE";
+            var privKekServ = Key.Parse(servWIF);
+
+            {
+                var cliWIF = "KxyACdWtFEY6p2nAbSAZv9NXgmJNm4i6HDUjgoy1YtVFTskV75KX";
+                var privKeyClient = Key.Parse(cliWIF);
+
+                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
+                var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	(fabriciomatos)
+            }
+
+            {
+                var cliWIF = "L4HCnWgYBjjK7UzTixqi5aSwSzf7Uf9fZHZVCt7MEfk2nGWFVHcd";
+                var privKeyClient = Key.Parse(cliWIF);
+
+                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
+                var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 32guJiHqPdr6iR1LzTHwCGjjcH3nRcerQU	(marcos)
+            }
+
+            {
+                var cliWIF = "L4RAP3yV2JuyrFCAJzjJENyxuep7quWrtPfFdQBFwvxEvyHRa19b";
+                var privKeyClient = Key.Parse(cliWIF);
+
+                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
+                var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3PKWpnH4GqPtDn2LQUMU5EoEsednqtBZZH	(others)
+            } 
+
+
+            {
+                var cliWIF = "L11S7b46MygEKiMFH8jdHJHLv1TPGS7x4i6wtZRdGWbfhK87Q9wi";
+                var privKeyClient = Key.Parse(cliWIF);
+
+                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
+                var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3JuD1pvmMBfUSehekfGMvnYrsUtgybvqvz	(default - new wallets)
+            } 
+        }
 
         [TestMethod]
         public void CreateMultiSig_SignApart()

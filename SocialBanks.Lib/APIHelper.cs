@@ -37,6 +37,16 @@ namespace SocialBanks.Lib
             return q;
         }
 
+        public async Task<IEnumerable<ParseObject>> FindIncompleteTransactions()
+        {
+            var query = from trans in ParseObject.GetQuery("Transaction").Include("senderWallet")
+                        where trans.Get<bool>("bitcoinTransfered") == false
+                        select trans;
+            var q = await query.FindAsync();
+
+            return q;
+        }
+
         public async Task<string> hello()
         {
             return await ParseCloud.CallFunctionAsync<string>("hello", new Dictionary<string, object>());
@@ -250,6 +260,8 @@ namespace SocialBanks.Lib
 
             return result;
         }
+
+
     }
 
     [DataContract]
