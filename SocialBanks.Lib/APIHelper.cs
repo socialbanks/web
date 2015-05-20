@@ -42,6 +42,22 @@ namespace SocialBanks.Lib
             return await ParseCloud.CallFunctionAsync<string>("hello", new Dictionary<string, object>());
         }
 
+        public  async Task<Dictionary<string, object>> get_unspent(string address)
+        {
+            var d = new Dictionary<string, object>();
+            d["addr"] = "3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi";
+
+            return await ParseCloud.CallFunctionAsync<Dictionary<string, object>>("get_unspent", d);
+        }
+
+        public async void set_transaction_broadcasted()
+        {
+            var d = new Dictionary<string, object>();
+
+            await ParseCloud.CallFunctionAsync<Dictionary<string, object>>("set_transaction_broadcasted", d);
+        }
+
+        
 
         public async Task<DtoApiResponse<List<DtoAsset>>> get_balances(params string[] adresses)
         {

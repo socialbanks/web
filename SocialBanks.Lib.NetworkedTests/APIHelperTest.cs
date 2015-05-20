@@ -476,6 +476,21 @@ namespace SocialBanks.Lib.NetworkedTests
             Assert.AreEqual(1, r.Result.Count);
         }
 
+        [TestMethod]
+        public void sign_bitcoin_transaction()
+        {
+            
+            var d = new Dictionary<string, object>();
+
+            var r = ParseCloud.CallFunctionAsync<Dictionary<string, object>>("sign_bitcoin_transaction", d);
+            //var r = ParseCloud.CallFunctionAsync<string>("sign_bitcoin_transaction", d);
+
+            r.Wait();
+
+            Assert.AreEqual(0, r.Result.Count);
+        }
+
+
 
         [TestMethod]
         public void SendReturnsValidTransaciton()

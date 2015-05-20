@@ -718,6 +718,9 @@
     <Content Include="Content\themes\ui-kit\ui-kit-projects\less\style.less" />
     <Content Include="Content\themes\ui-kit\ui-kit-projects\less\ui-kit-styles.less" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="keys.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\bitcore\address.js" />
     <Content Include="Scripts\bitcore\bitcore.js" />
     <Content Include="Scripts\bitcore\bitcore.min.js" />
