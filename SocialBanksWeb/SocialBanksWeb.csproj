@@ -339,6 +339,7 @@
     <Content Include="Content\themes\common-files\icons\Yin-and-Yang%402x.png" />
     <Content Include="Content\themes\common-files\img\android-phone-bw.png" />
     <Content Include="Content\themes\common-files\img\android-phone-color.png" />
+    <Content Include="Content\themes\common-files\img\android-phone-color1.png" />
     <Content Include="Content\themes\common-files\img\bitcoin.jpg" />
     <Content Include="Content\themes\common-files\img\bitcoin2.jpg" />
     <Content Include="Content\themes\common-files\img\Brazil_002.jpg" />
@@ -453,8 +454,12 @@
     <Content Include="Content\themes\common-files\img\header\ticket-clear%402x.png" />
     <Content Include="Content\themes\common-files\img\iphone-bw.png" />
     <Content Include="Content\themes\common-files\img\iphone.png" />
+    <Content Include="Content\themes\common-files\img\iphone1.png" />
     <Content Include="Content\themes\common-files\img\Italy_001.jpg" />
     <Content Include="Content\themes\common-files\img\map.jpg" />
+    <Content Include="Content\themes\common-files\img\math\formula1.png" />
+    <Content Include="Content\themes\common-files\img\math\formula2.png" />
+    <Content Include="Content\themes\common-files\img\math\formula3.png" />
     <Content Include="Content\themes\common-files\img\NY_001.jpg" />
     <Content Include="Content\themes\common-files\img\NY_002.jpg" />
     <Content Include="Content\themes\common-files\img\projects\img-2.png" />
