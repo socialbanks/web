@@ -337,6 +337,8 @@
     <Content Include="Content\themes\common-files\icons\Watches%402x.png" />
     <Content Include="Content\themes\common-files\icons\Wine%402x.png" />
     <Content Include="Content\themes\common-files\icons\Yin-and-Yang%402x.png" />
+    <Content Include="Content\themes\common-files\img\android-phone-bw.png" />
+    <Content Include="Content\themes\common-files\img\android-phone-color.png" />
     <Content Include="Content\themes\common-files\img\bitcoin.jpg" />
     <Content Include="Content\themes\common-files\img\bitcoin2.jpg" />
     <Content Include="Content\themes\common-files\img\Brazil_002.jpg" />
@@ -449,6 +451,8 @@
     <Content Include="Content\themes\common-files\img\header\iphone.png" />
     <Content Include="Content\themes\common-files\img\header\logo%402x.png" />
     <Content Include="Content\themes\common-files\img\header\ticket-clear%402x.png" />
+    <Content Include="Content\themes\common-files\img\iphone-bw.png" />
+    <Content Include="Content\themes\common-files\img\iphone.png" />
     <Content Include="Content\themes\common-files\img\Italy_001.jpg" />
     <Content Include="Content\themes\common-files\img\map.jpg" />
     <Content Include="Content\themes\common-files\img\NY_001.jpg" />
