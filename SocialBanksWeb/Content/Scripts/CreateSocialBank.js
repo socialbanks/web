@@ -15,6 +15,8 @@
     }
 
     this.Click_finish = function () {
+        $('#error-message').html('');
+
         if (!$('#form-create-user').valid()) {
             return;
         }
@@ -30,7 +32,8 @@
                 url: 'PostSocialBank',
                 method: 'POST',
                 data: data,
-                success: self.success_PostSocialBank
+                success: self.success_PostSocialBank,
+                error: self.error
             }
             );
     }
@@ -44,7 +47,8 @@
                 url: 'PostUser',
                 method: 'POST',
                 data: data,
-                success: self.success_PostUser
+                success: self.success_PostUser,
+                error: self.error
             }
             );
 
@@ -52,6 +56,11 @@
 
     this.success_PostUser = function (response) {
         console.log(response);
+    }
+
+    this.error = function (response) {
+        console.log(response);
+        $('#error-message').html(response.responseText);
     }
 
 }
