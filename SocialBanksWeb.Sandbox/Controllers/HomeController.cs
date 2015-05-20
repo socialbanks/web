@@ -114,11 +114,18 @@ namespace SocialBanksWeb.Controllers
             };
             resultList.Add(it);
         }
-        
+
+        public long BalanceForAddress(string address)
+        {
+            var a = new Info.Blockchain.API.BlockExplorer.BlockExplorer().GetAddress(address);
+
+            return a.FinalBalance;
+        }
+
         [HttpPost]
         public JsonResult PostTx(string txHexa)
         {
-            PushTx.PushTransaction(txHexa); 
+            PushTx.PushTransaction(txHexa);
             return Json("success");
         }
 
