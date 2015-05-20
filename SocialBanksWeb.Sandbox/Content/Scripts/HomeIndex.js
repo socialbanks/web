@@ -12,7 +12,10 @@
         $('#btn-sign_transaction').click(self.Click_sign_transaction);
 
         $('#btn-send-transaction-server').click(self.Click_send_transaction_server);
+        $('#btn-BalanceForAddress').click(self.Click_BalanceForAddress);
+
     }
+
 
     this.Click_sign_transaction = function () {
         var publicKeys = [self.PubKey];
@@ -66,11 +69,23 @@
                 {
                     tx: "01000000013d1752950d03bc3438d10c3faaeddcf27d642dbadb26d8efc2c18d0857612d0d000000009200004730440220403fcb0dfadba8b66be1ef3fdbbfe56db0e76b8657cf2febbe659a9a42776f6802206b79399db9b1932e8a13c99e656f736fd253b3fbcfecfbb873f370b9dcadba78014752210213cc3e8aa13da9fdced6ac55737984b71a0ea6a9c1817cc15f687163813e44c82103d4e7ffa6ebedc601a5e9ca48b9d9110bef80c15ce45039a08a513801712579de52aeffffffff01e8030000000000001976a9149ea84056a5a9e294d93f11300be51d51868da69388ac00000000",
                 },
-            success: self.Sucess_send_transaction_server
+            success: self.Sucess_simple
         });
     }
 
-    this.Sucess_send_transaction_server = function (response) {
+    this.Click_BalanceForAddress = function () {
+        $.ajax({
+            url: "/home/BalanceForAddress",
+            method: "GET",
+            data:
+                {
+                    address: "1Ko36AjTKYh6EzToLU737Bs2pxCsGReApK",
+                },
+            success: self.Sucess_simple
+        });
+    }
+
+    this.Sucess_simple = function (response) {
         console.log('response');
         console.log(response);
     }
