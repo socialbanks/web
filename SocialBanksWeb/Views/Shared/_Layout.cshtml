@@ -17,6 +17,8 @@
         @Styles.Render("~/Content/themes/ui-kit/ui-kit-crew/css/ui-kit-styles.css")
         @Styles.Render("~/Content/themes/ui-kit/ui-kit-projects/css/ui-kit-styles.css")
         @Styles.Render("~/Content/css")
+
+        @RenderSection("ViewCustomStyles", required: false)
     </head>
     <body>
         <div class="page-wrapper">
@@ -27,21 +29,21 @@
                         <div class="navbar col-sm-12 navbar-fixed-top" role="navigation">
                             <div class="navbar-header">
                                 <button type="button" class="navbar-toggle"></button>
-                                <a class="brand" href="#"><img src="~/Content/themes/common-files/img/socialbanks.png" alt="Social Banks" /> SocialBanks</a>
+                                <a class="brand" href="@Url.Action("index", "Home" )"><img src="~/Content/themes/common-files/img/socialbanks.png" alt="Social Banks" /> SocialBanks</a>
                             </div>
                             <div class="navbar-collapse collapse">
                                 <ul class="nav pull-right">
                                     <li>
-                                        <a href="#sb-section" class="social-banks-list-link">SOCIAL BANKS</a>
+                                        <a href="@Url.Action("index", "Home")#sb-section" class="social-banks-list-link">SOCIAL BANKS</a>
                                     </li>
                                     <li>
-                                        <a href="#dc-section" class="digital-currencies-link">DIGITAL CURRENCY</a>
+                                        <a href="@Url.Action("index", "Home")#dc-section" class="digital-currencies-link">DIGITAL CURRENCY</a>
                                     </li>
                                     <li>
-                                        <a href="#os-section" class="our-solution-link">OUR SOLUTION</a>
+                                        <a href="@Url.Action("index", "Home")#os-section" class="our-solution-link">OUR SOLUTION</a>
                                     </li>
                                     <li>
-                                        <a href="#who-section" class="who-whe-are-link">WHO WE ARE</a>
+                                        <a href="@Url.Action("index", "Home")#who-section" class="who-whe-are-link">WHO WE ARE</a>
                                     </li>
                                 </ul>
                                 <ul class="subnav">

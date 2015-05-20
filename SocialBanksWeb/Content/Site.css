@@ -126,6 +126,12 @@
     font-weight: bolder;
 }
 
+.custom-form {
+    padding-top: 140px;
+}
+.talign-center {
+    text-align: center;
+}
 .youtube-container { display: block; margin: 20px auto; width: 100%;}
 .youtube-player { display: block; /* assuming that the video has a 16:9 ratio */  padding-bottom: 56.25%; overflow: hidden; position: relative; width: 100%; height: 100%; cursor: hand; cursor: pointer; display: block; }
 img.youtube-thumb { bottom: 0; display: block; left: 0; margin: auto; max-width: 100%; width: 100%; height: 530px; position: absolute; right: 0; top: 0; height: auto }

@@ -2,95 +2,76 @@
     ViewBag.Title = "Register New Social Bank";
 }
 
-<div id="div-create-bank">
-    <h2>Create a New Social Bank</h2>
-    <form id="form-create-bank">
-        <label>Social Bank's name:</label>
-        <br />
-        <input type="text" id="name" name="name" value="" required />
-        <br />
-        <br />
-        <label>Social Money:</label>
-        <br />
-        <input type="text" id="socialMoneyName" name="socialMoneyName" value="" required />
-        <br />
-        It needs to be different from the social bank's name.
-        <br />
-        <br />
+@section ViewCustomStyles
+{
+    <link href="@Url.Content("~/Content/themes/ui-kit/ui-kit-contacts/css/ui-kit-styles.css")" rel="stylesheet" type="text/css" />
+}
 
-        <label>Social Bank's description:</label>
-        <br />
-        <textarea id="description" name="description" required></textarea>
-        <br />
+<section class="contacts-1 custom-form">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-2">
+                <div id="div-create-bank">
+                    <h2>Create a New Social Bank</h2>
+                    <form id="form-create-bank">
+                        <label class="h6">Social Bank's name:</label>
+                        <input type="text" id="name" name="name" value="" required class="form-control" />
+                        <label class="h6">Social Money:</label>&nbsp;&nbsp; It needs to be different from the social bank's name.
+                        <input type="text" id="socialMoneyName" name="socialMoneyName" value="" required class="form-control" />
+                            
 
-        <label>Bitcoin address for donations:</label>
-        <br />
-        <input type="text" id="bitcoinAddressForDonation" name="bitcoinAddressForDonation" value="" required />
-        <br />
-        <br />
+                        <label class="h6">Social Bank's description:</label>
+                        <textarea rows="7" id="description" name="description" required class="form-control"></textarea>
 
-        <label>Social Bank's address:</label>
-        <br />
-        <textarea id="address" name="address" required></textarea>
-        <br />
-        <br />
+                        <label class="h6">Bitcoin address for donations:</label>
+                        <input type="text" id="bitcoinAddressForDonation" name="bitcoinAddressForDonation" value="" required class="form-control" />
 
-        <label>Zip Code:</label>
-        <br />
-        <input type="text" id="zipcode" name="zipcode" value="" required />
-        <br />
-        <br />
+                        <label class="h6">Social Bank's address:</label>
+                        <textarea rows="7" id="address" name="address" required class="form-control"></textarea>
 
-    </form>
+                        <label class="h6">Zip Code:</label>
+                        <input type="text" id="zipcode" name="zipcode" value="" required class="form-control" />
+                    </form>
+                    <button id="btn-create-bank" class="btn btn-primary">NEXT</button>
+                </div>
+                <div id="div-create-user" style="display: none">
+                    <h2>Create Administrator User for Social Bank</h2>
+                    <form id="form-create-user">
+                        <label class="h6">e-mail/Username:</label>
+                        <input type="text" id="email" name="email" value="" required class="form-control" />
 
-    <button id="btn-create-bank">NEXT</button>
+                        <label class="h6">First Name:</label>
+                        <input type="text" id="firstName" name="firstName" value="" required class="form-control" />
 
-</div>
+                        <label class="h6">Last Name:</label>
+                        <input type="text" id="lastName" name="lastName" value="" required class="form-control" />
 
-<div id="div-create-user" style="display: none">
-    <h2>Create Administrator User for Social Bank</h2>
-    <form id="form-create-user">
-        <label>e-mail/Username:</label>
-        <br />
-        <input type="text" id="email" name="email" value="" required />
-        <br />
-        <br />
+                        <label class="h6">Password:</label>
+                        <input type="password" id="password" name="password" value="" required class="form-control" />
 
-        <label>First Name:</label>
-        <br />
-        <input type="text" id="firstName" name="firstName" value="" required />
-        <br />
-        <br />
+                        <label class="h6">Confirm Password:</label>
+                        <input type="password" id="password2" name="password2" value="" required />
 
-        <label>Last Name:</label>
-        <br />
-        <input type="text" id="lastName" name="lastName" value="" required />
-        <br />
-        <br />
+                    </form>
 
-        <label>Password:</label>
-        <br />
-        <input type="password" id="password" name="password" value="" required />
-        <br />
-        <br />
+                    <button id="btn-finish" class="btn btn-wanring">FINISH</button>
+                </div>
 
-        <label>Confirm Password:</label>
-        <br />
-        <input type="password" id="password2" name="password2" value="" required />
-        <br />
-        <br />
-
-    </form>
-
-    <button id="btn-finish">FINISH</button>
-</div>
-
-<div id="success-message"></div>
-<div id="error-message"></div>
-
+                <div id="success-message"></div>
+                <div id="error-message"></div>
+            </div>
+        </div>
+    </div>
+</section>
 @section Scripts {
+    @Scripts.Render("~/bundles/jqueryscroll")
+    @Scripts.Render("~/bundles/sharrrejs")
+    @Scripts.Render("~/bundles/startupkitjs")
     @Scripts.Render("~/Scripts/jquery.validate.js");
-
+    @Scripts.Render("~/bundles/pagetransitions")
+    @Scripts.Render("~/bundles/easing")
+    @Scripts.Render("~/bundles/jquerysvg")
+    @Scripts.Render("~/bundles/jquerysvganim")
     @Scripts.Render("~/Content/Scripts/CreateSocialBank.js")
     <script>
         new CreateSocialBank($).Ready();
