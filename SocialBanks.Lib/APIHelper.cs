@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -40,7 +41,7 @@ namespace SocialBanks.Lib
         public async Task<IEnumerable<ParseObject>> FindIncompleteTransactions()
         {
             var query = from trans in ParseObject.GetQuery("Transaction").Include("senderWallet")
-                        where trans.Get<bool>("bitcoinTransfered") == false
+                        where trans.Get<string>("broadcastStatus") == "pending"
                         select trans;
             var q = await query.FindAsync();
 
@@ -52,10 +53,10 @@ namespace SocialBanks.Lib
             return await ParseCloud.CallFunctionAsync<string>("hello", new Dictionary<string, object>());
         }
 
-        public  async Task<Dictionary<string, object>> get_unspent(string address)
+        public async Task<Dictionary<string, object>> get_unspent(string address)
         {
             var d = new Dictionary<string, object>();
-            d["addr"] = "3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi";
+            d["addr"] = address;
 
             return await ParseCloud.CallFunctionAsync<Dictionary<string, object>>("get_unspent", d);
         }
@@ -67,7 +68,7 @@ namespace SocialBanks.Lib
             await ParseCloud.CallFunctionAsync<Dictionary<string, object>>("set_transaction_broadcasted", d);
         }
 
-        
+
 
         public async Task<DtoApiResponse<List<DtoAsset>>> get_balances(params string[] adresses)
         {
@@ -231,22 +232,61 @@ namespace SocialBanks.Lib
         public string HttpGet(string URI)
         {
             System.Net.WebRequest req = System.Net.WebRequest.Create(URI);
-            //req.Proxy = new System.Net.WebProxy(ProxyString, true); //true means no proxy
             System.Net.WebResponse resp = req.GetResponse();
             System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
             return sr.ReadToEnd().Trim();
         }
 
+        public Tuple<bool, string> BroadcastTransaction(string rawTransaction)
+        {
+            var uri = "https://blockchain.info/pushtx";
+            var values = new Dictionary<string, string>
+                {
+                   { "tx", rawTransaction }
+                };
+
+            var t = HttpPost(uri, values);
+            t.Wait();
+
+            var result = false;
+            //Sucesso
+            if (t.Result.StartsWith("Transaction Submitted"))
+            {
+                result = true;
+            }
+
+
+            //Erros identificados:
+            //An outpoint is already spent in [87172736]
+            //Parse: exception decoding Hex string: invalid characters encountered in Hex string
+            //Parse: Error Parsing Transaction
+
+            return new Tuple<bool, string>(result, t.Result);
+        }
+
+
+        public async Task<string> HttpPost(string uri, Dictionary<string, string> formParameters)
+        {
+            using (var client = new HttpClient())
+            {
+                var content = new FormUrlEncodedContent(formParameters);
+
+                var response = await client.PostAsync(uri, content);
+
+                return await response.Content.ReadAsStringAsync();
+            }
+        }
+
 
         //curl https://testnet.helloblock.io/v1/addresses/unspents?addresses=mvaRDyLUeF4CP7Lu9umbU3FxehyC5nUz3L&addresses=mpjuaPusdVC5cKvVYCFX94bJX1SNUY8EJo&limit=2
- 
+
         public List<UnspentOutput> FindUnspendTransactions(string address)
         {
             var strJSON = HttpGet("https://blockchain.info/pt/unspent?active=" + address);
-            
-            
+
+
             var unspendList = DeserializeUnspentOutputList(strJSON);
-            
+
             return unspendList.outputs;
 
         }

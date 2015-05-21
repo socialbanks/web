@@ -175,7 +175,7 @@ namespace SocialBanksWeb.Controllers
                 BitcoinHelper.Log += " | Controle - Ponto 3";
                 BitcoinHelper.Log += " | Params: " + privKeyServer + "," + clientWIF + "," + receiverAddr + "," + valueInSatoshis;
 
-                result = btcHelper.CreateAndSignP2SHTransaction(privKeyServer, clientWIF, receiverAddr, long.Parse(valueInSatoshis));
+                result = btcHelper.CreateAndSignP2SHTransaction(privKeyServer, "<password>", clientWIF, receiverAddr, long.Parse(valueInSatoshis));
             }
             catch (Exception e)
             {

@@ -38,41 +38,21 @@ namespace SocialBanks.Lib
         private const decimal SATOSHIS_PER_BTC = 100000000.0m;
         private const long DEFAULT_FEE = 2000; //0.00002000  (R$0.02 em moeda social)
 
-        //https://blockchain.info/pt/unspent?active=3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi
+        //https://blockchain.info/pt/unspent?active=3GYfQ22WohzvDEo9Zhigbzg4sP7BPThG92
         private async Task<List<DtoUnspentTransaction>> FindUnspentTransactionsByAddress(string address)
         {
-            BitcoinHelper.Log += " | FindUnspentTransactionsByAddress";
-
             var result = new List<DtoUnspentTransaction>();
-/*
-            result.Add(
-                new DtoUnspentTransaction()
-                {
-                    TxId = "bf6345df158ebfe9f43f8033b26a352113185a2204d37176e9696a8dc044fe18",
-                    Index = 0,
-                     ValueInSatoshis = 49000
-                });
-*/            
             var apiHelper = new APIHelper();
             Dictionary<string, object> result_unspent = await apiHelper.get_unspent(address);
 
-            BitcoinHelper.Log += " | Find... Ponto 1";
-
             for (int i = 0; i < result_unspent.Count; i++)
             {
-                BitcoinHelper.Log += " | Find... Ponto 2";
-
                 var item = result_unspent.ElementAt(i);
                 if (item.Key == "unspent_outputs")
                 {
-                    BitcoinHelper.Log += " | Find... Ponto 3";
-
-
                     var outputs = (item.Value as List<object>);
                     for (int j = 0; j < outputs.Count; j++)
                     {
-                        BitcoinHelper.Log += " | Find... Ponto 4";
-
                         Dictionary<string, object> output = (outputs[j] as Dictionary<string, object>);
 
                         string tx_hash_big_endian = output["tx_hash_big_endian"].ToString();
@@ -113,10 +93,15 @@ namespace SocialBanks.Lib
             return addressBalanceInSatoshis;
         }
 
-        public DtoSignedTransaction CreateAndSignP2SHTransaction(string wifServer, string wifClient, string receiverAddress, long valueInSatoshis)
+        public DtoSignedTransaction CreateAndSignP2SHTransaction(string wifServer, string password, string wifClient, string receiverAddress, long valueInSatoshis)
         {
             //Only SocialBanks know this privKey
-            var privKeyServer = Key.Parse(wifServer, Network.Main);
+            Key privKeyServer;
+            if (password == "")
+                privKeyServer = Key.Parse(wifServer, Network.Main);
+            else
+                privKeyServer = Key.Parse(wifServer, password, Network.Main);
+
             var pubKeyServer = privKeyServer.PubKey;
             var addressServer = pubKeyServer.GetAddress(Network.Main); // => 14pkzzJbAg1N3EFkEnc4o5uHQJAzCqUUFJ
 

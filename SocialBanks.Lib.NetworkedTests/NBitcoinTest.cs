@@ -495,11 +495,30 @@ namespace SocialBanksLib.NetworkedTests
             var receiverAddr = "1FTuKcjGUrMWatFyt8i1RbmRzkY2V9TDMG";
 
             var btcHelper = new BitcoinHelper();
-            var trans = btcHelper.CreateAndSignP2SHTransaction(servWIF, cliWIF, receiverAddr, 10000);
+            var trans = btcHelper.CreateAndSignP2SHTransaction(servWIF, "", cliWIF, receiverAddr, 10000);
 
             Assert.AreNotEqual("", trans.RawTx);
         }
 
+
+        [TestMethod]
+        public void CreateNKeys()
+        {
+            var result = "";
+
+            for (int i = 1; i <= 10; i++)
+            {
+                var password = "<type-your-password-here>";
+                var privKey = new Key();
+                var address = privKey.PubKey.GetAddress(Network.Main).ToString();
+                var pubKey = privKey.PubKey.ToHex();
+                var encryptedWif = privKey.GetEncryptedBitcoinSecret(password, Network.Main).ToWif();
+
+                result += string.Format("[{0}] {1}\nPubKey: {2}\nEncryptedWif: {3}\nOBS:\n\n", i, address, pubKey, encryptedWif);
+            }
+
+            Assert.IsTrue(true);
+        }
 
         [TestMethod]
         public void CreateP2SHAddressForTest()
@@ -512,7 +531,7 @@ namespace SocialBanksLib.NetworkedTests
                 var privKeyClient = Key.Parse(cliWIF);
 
                 Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
-                var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	(fabriciomatos)
+                var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	(fabriciomatos - ANDROID)
             }
 
             {
@@ -538,7 +557,16 @@ namespace SocialBanksLib.NetworkedTests
 
                 Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
                 var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3JuD1pvmMBfUSehekfGMvnYrsUtgybvqvz	(default - new wallets)
-            } 
+            }
+
+            
+            {
+                var cliWIF = "L3CdcrfPsrw3E4s7XKQ6MPBwHc5jvoP23SGbSDfgyBVWno9oPaDD";
+                var privKeyClient = Key.Parse(cliWIF);
+
+                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
+                var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3GYfQ22WohzvDEo9Zhigbzg4sP7BPThG92	(fabriciomatos - iOS - Brazuca)
+            }
         }
 
         [TestMethod]
