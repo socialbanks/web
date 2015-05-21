@@ -17,7 +17,7 @@ namespace WebJobBitcoinNetworkMonitor
         {
             Console.WriteLine("[1] Initializing WebJobBitcoinNetworkMonitor...");
 
-            var keysFilePath = "./keys.txt";
+            var keysFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\keys.txt";
             var apiHelper = new APIHelper();
 
             Console.WriteLine("  + Connecting to SocialBanks API...");
@@ -41,10 +41,13 @@ namespace WebJobBitcoinNetworkMonitor
                 {
                     var errorMessage = string.Format("ERROR: Couldn't sign the transaction. Message: {0}", e.Message);
 
+                    Console.WriteLine(errorMessage);
+
                     transaction["broadcastStatus"] = "error";
                     transaction["broadcastLog"] = errorMessage;
 
-                    Console.WriteLine(errorMessage);
+                    var taskSave = transaction.SaveAsync();
+                    taskSave.Wait();
                 }
 
                 try
