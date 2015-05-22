@@ -15,6 +15,10 @@ namespace WebJobBitcoinNetworkMonitor
     {
         static void Main(string[] args)
         {
+            //TODO: create params to set verbose mode
+            BitcoinHelper.Verbose = true;
+
+
             Console.WriteLine("[1] Initializing WebJobBitcoinNetworkMonitor...");
 
             var keysFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\keys.txt";
@@ -43,7 +47,8 @@ namespace WebJobBitcoinNetworkMonitor
 
                     Console.WriteLine(errorMessage);
 
-                    transaction["broadcastStatus"] = "error";
+                    transaction["broadcastStatus"] = "pending";
+                    //transaction["broadcastStatus"] = "error";
                     transaction["broadcastLog"] = errorMessage;
 
                     var taskSave = transaction.SaveAsync();
@@ -134,7 +139,8 @@ namespace WebJobBitcoinNetworkMonitor
             {
                 var errorMessage = string.Format("ERROR: Couldn't broadcast transaction. Message: {0}", e.Message);
 
-                transaction["broadcastStatus"] = "error";
+                transaction["broadcastStatus"] = "pending";
+                //transaction["broadcastStatus"] = "error";
                 transaction["broadcastLog"] = errorMessage;
 
                 Console.WriteLine(errorMessage);

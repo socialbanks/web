@@ -78,6 +78,7 @@ namespace SocialBanksWeb.Controllers
             return Json("success");
         }
 
+        /*
         [HttpPost]
         public string sign_transaction_server(string tx)
         {
@@ -99,7 +100,7 @@ namespace SocialBanksWeb.Controllers
         //It's important to send the serverWIF because anyone can invoke this method. Otherwise we expose the system security.
         //Must be HTTPS!!!!!
         [HttpPost]
-        public JsonResult create_and_sign_transaction(string receiverAddr, string valueInSatoshis, string clientWIF /*for test*/)
+        public JsonResult create_and_sign_transaction(string receiverAddr, string valueInSatoshis, string clientWIF )
         {
             var result = new DtoSignedTransaction()
             {
@@ -147,7 +148,7 @@ namespace SocialBanksWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult create_and_sign_transaction_ORIGINAL(string receiverAddr, string valueInSatoshis, string clientWIF /*for test*/)
+        public JsonResult create_and_sign_transaction_ORIGINAL(string receiverAddr, string valueInSatoshis, string clientWIF)
         {
             var result = new DtoSignedTransaction();
 
@@ -192,6 +193,9 @@ namespace SocialBanksWeb.Controllers
 
             return Json(result);
         }
+
+*/
+
         /*
                 $.ajax({
                     url: "/home/create_and_sign_transaction",

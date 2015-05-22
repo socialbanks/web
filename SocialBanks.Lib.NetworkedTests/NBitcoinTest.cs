@@ -8,6 +8,7 @@ using SocialBanks.Lib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -525,13 +526,13 @@ namespace SocialBanksLib.NetworkedTests
         public void CreateP2SHAddressForTest()
         {
             var servWIF_BRAZUCA = "KwPGv91ZJUB3UShXBWAZAzBXjYCkMgpoXbryW3dwW3B66pWivMRE";
-            var privKekServ_BRAZUCA = Key.Parse(servWIF_BRAZUCA);
+            var privKekServ = Key.Parse(servWIF_BRAZUCA);
 
             {
                 var cliWIF = "KxyACdWtFEY6p2nAbSAZv9NXgmJNm4i6HDUjgoy1YtVFTskV75KX";
                 var privKeyClient = Key.Parse(cliWIF);
 
-                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ_BRAZUCA.PubKey, privKeyClient.PubKey });
+                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
                 var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3Qx7v3AQshdKGCqu81QYtkQFDwHKDqaNBi	(fabriciomatos - ANDROID)
             }
 
@@ -539,7 +540,7 @@ namespace SocialBanksLib.NetworkedTests
                 var cliWIF = "L4HCnWgYBjjK7UzTixqi5aSwSzf7Uf9fZHZVCt7MEfk2nGWFVHcd";
                 var privKeyClient = Key.Parse(cliWIF);
 
-                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ_BRAZUCA.PubKey, privKeyClient.PubKey });
+                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
                 var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 32guJiHqPdr6iR1LzTHwCGjjcH3nRcerQU	(marcos)
             }
 
@@ -547,7 +548,7 @@ namespace SocialBanksLib.NetworkedTests
                 var cliWIF = "L4RAP3yV2JuyrFCAJzjJENyxuep7quWrtPfFdQBFwvxEvyHRa19b";
                 var privKeyClient = Key.Parse(cliWIF);
 
-                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ_BRAZUCA.PubKey, privKeyClient.PubKey });
+                Script clientScriptPubKey = PayToMultiSigTemplate.Instance.GenerateScriptPubKey(2, new[] { privKekServ.PubKey, privKeyClient.PubKey });
                 var clientP2SHAddress = clientScriptPubKey.GetScriptAddress(Network.Main);// => 3PKWpnH4GqPtDn2LQUMU5EoEsednqtBZZH	(others)
             } 
 
@@ -754,7 +755,18 @@ namespace SocialBanksLib.NetworkedTests
             return bytes;
         }
 
+        [TestMethod]
+        public void UnderstandingNumberFormat()
+        {
+            decimal decimalValue = 1500.3212m;
+            Assert.AreEqual("1500.32120000", decimalValue.ToString("0.00000000", CultureInfo.CreateSpecificCulture("en-US")));
+
+            double floatlValue = 20.0 / 3.0;
+            Assert.AreEqual("6.66666667", floatlValue.ToString("0.00000000", CultureInfo.CreateSpecificCulture("en-US")));
+        }
+
     }
+
 
 
 
