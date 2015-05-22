@@ -20,7 +20,7 @@
             url: 'https://blockchain.info/q/addressbalance/' + a,
             type: 'get',
         }).done(function (msg) {
-            linkT.find('span.sbb-balance-value').text('$'+ (msg/100000000));
+            linkT.find('span.sbb-balance-value').text((msg / 100000000) + ' BTC');
             linkT.removeAttr('hidden');
         });
     });

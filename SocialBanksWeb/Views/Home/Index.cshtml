@@ -64,10 +64,12 @@
                                 -->
                                 <div class="col-xs-12 donate-now" address="@obj.bitcoinAddressForDonation">
                                     <div class="address-qrcode" hidden>
-                                        &nbsp;
+                                        <!-- &nbsp; -->
+                                        <div class="address-number">@obj.bitcoinAddressForDonation</div>
                                     </div>
                                     <button class="btn btn-primary social-bank-donate-button">Donate Now!</button>
                                     <button class="btn btn-warning social-bank-cancel-donation-button" style="display: none;">Cancel</button>
+                                    
                                 </div>
                             </div>
                         </div>

@@ -113,6 +113,12 @@
     margin-bottom: 30px;
 }
 
+.address-number {
+    font-size: 9px;
+    padding: 2px;
+}
+
+
 .math-formula {
     text-align: center;
 }
